@@ -40,3 +40,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# Markdown Personal Documents
+Requirements.md
+
+# VS Code lines counter
+.VSCodeCounter
