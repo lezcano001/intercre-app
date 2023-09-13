@@ -5,10 +5,13 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from 'next-auth/providers/credentials'
 
-// import { env } from "~/env.mjs";
+import bcrypt from 'bcrypt'
+
+import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import { jwtHelper, type AuthUser, tokenOneDay, tokenOneWeek } from "~/utils/jwtHelper";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,15 +23,30 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
+      participantCI: string;
       // ...other properties
       // role: UserRole;
     };
+    error?: "RefreshAccessTokenError"
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    id: string;
+    participantCI: string;
+    // ...other properties
+    // role: UserRole;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    user?: AuthUser;
+    accessToken?: string;
+    refreshToken?: string;
+    accessTokenExpired?: number;
+    refreshTokenExpired?: number;
+    error?: "RefreshAccessTokenError"
+  }
 }
 
 /**
@@ -38,20 +56,131 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: ({ session, token }) => {
+      if (token) {
+        session.user = {
+          ...session.user,
+          id: token.user!.id,
+          participantCI: token.user!.participantCI
+        }
+      }
+
+      session.error = token.error
+      return session
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        const authUser = { participantCI: user.participantCI, id: user.id};
+
+        const accessToken = await jwtHelper.createAccessToken(authUser)
+        const refreshToken = await jwtHelper.createRefreshToken(authUser)
+
+        const accessTokenExpired = Date.now() / 1000 + tokenOneDay;
+        const refreshTokenExpired = Date.now() / 1000 + tokenOneWeek;
+
+        return {
+          ...token,
+          accessToken,
+          refreshToken,
+          accessTokenExpired,
+          refreshTokenExpired,
+          user: authUser
+        }
+      } else {
+        if (token) {
+          // In subsequent requests, check access token has expired, try to refresh it
+          if (Date.now() / 1000 > token.accessTokenExpired!) {
+            const verifyToken = await jwtHelper.verifyToken(token.refreshToken!)
+
+            if (verifyToken) {
+              const user = await prisma.user.findFirst({
+                where: {
+                  participantCI: token.user?.participantCI
+                }
+              })
+
+              if (user) {
+                const accessToken = await jwtHelper.createAccessToken(token.user!)
+                const accessTokenExpired = Date.now() / 1000 * tokenOneDay
+
+                return {
+                  ...token,
+                  accessToken,
+                  accessTokenExpired
+                }
+
+              }
+            }
+
+            return {
+              ...token,
+              error: "RefreshAccessTokenError"
+            }
+          }
+        }
+      }
+
+      return token
+    }
   },
   adapter: PrismaAdapter(prisma),
+  secret: env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 // 1 hour
+  },
+  // useSecureCookies: true,
+  pages: {
+    signIn: '/auth/login',
+  },
   providers: [
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
+    CredentialsProvider({
+      // id: "next-auth",
+      type: 'credentials',
+      // The name to display on the sign form (e.g. 'Sign in with...')
+      // name: 'Credentials',
+      credentials: {
+      },
+      async authorize(credentials, req) {
+        const {
+          ci,
+          password
+        } = credentials as {
+          ci: string;
+          password: string;
+        }
+
+        try {
+          const user = await prisma.user.findFirst({
+            where: {
+              participantCI: ci
+            },
+            include: {
+              participant: true
+            }
+          })
+
+          if (user && credentials) {
+            const validPassword = await bcrypt.compare(password, user.password)
+            console.log(validPassword)
+
+            if (validPassword) {
+              return {
+                id: user.id,
+                participantCI: user.participantCI,
+                email: user.email,
+                image: user.image,
+                name: `${user.participant.firstname} ${user.participant.lastname}`
+              }
+            }
+          }
+        } catch (err) {
+          console.log(err)
+        }
+
+        return null
+      }
+    })
     /**
      * ...add more providers here.
      *

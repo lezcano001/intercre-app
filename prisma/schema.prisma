@@ -15,16 +15,26 @@ datasource db {
     url          = env("DATABASE_URL")
 }
 
+model Image {
+    fileKey       String      @id
+    imageURL      String
+    participant   Participant @relation(fields: [participantCI], references: [CI], onDelete: Cascade)
+    participantCI String      @unique
+
+    @@index([participantCI])
+}
+
 model Participant {
     CI             String      @id
     firstname      String
     lastname       String
     telephone      String
     email          String
-    imageURL       String
     birthDate      DateTime
     institution    Institution @relation(fields: [institutionISO], references: [ISO])
     institutionISO Int
+    User           User?
+    image          Image?
 
     @@index([institutionISO])
 }
@@ -69,13 +79,17 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
+    id            String      @id @default(cuid())
+    email         String?     @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    participant   Participant @relation(fields: [participantCI], references: [CI])
+    participantCI String      @unique
+    password      String
+
+    @@index([participantCI])
 }
 
 model VerificationToken {
