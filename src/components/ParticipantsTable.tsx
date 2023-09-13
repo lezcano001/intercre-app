@@ -17,9 +17,9 @@ export function ParticipantsTable() {
                             className="
                                 w-[20%]"
                         >
-                            DOCUMENTO DE IDENTIDAD
+                            DOC DE IDENTIDAD
                         </Th>
-                        <Th>NOMBRE</Th>
+                        <Th>NOMBRE Y APELLIDO</Th>
                         <Th isNumeric>ACCIONES</Th>
                     </Tr>
                 </Thead>
