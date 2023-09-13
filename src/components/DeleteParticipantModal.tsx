@@ -1,4 +1,5 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure, ModalFooter, useToast } from "@chakra-ui/react"
+import { TRPCClientError } from "@trpc/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { api } from "~/utils/api";
@@ -43,14 +44,16 @@ export function DeleteParticipantModal({ participantCI, onSuccessRedirectTo }: D
             }
         } catch (err) {
             setIsLoading(false)
-            toast({
-                title: 'Ha ocurrido un error al eliminar al participante',
-                description: 'Por favor, comuníquese con el servicio técnico',
-                position: 'bottom-right',
-                isClosable: true,
-                status: 'error'
-            })
-            console.log(err)
+            if (err instanceof TRPCClientError) {
+                toast({
+                    title: 'Ha ocurrido un error al eliminar al participante',
+                    description: err.message,
+                    position: 'bottom-right',
+                    isClosable: true,
+                    status: 'error'
+                })
+            }
+            // console.log(err)
         }
     }
 
