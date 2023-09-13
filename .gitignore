@@ -46,3 +46,7 @@ Requirements.md
 
 # VS Code lines counter
 .VSCodeCounter
+
+# Custom pages for testing concepts
+/src/pages/testing.tsx
+/src/pages/testing002.tsx
