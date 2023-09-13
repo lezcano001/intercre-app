@@ -10,13 +10,14 @@ import { api } from "~/utils/api"
 import { Card } from "~/components/ui/Card"
 import { StandardSelectInput } from "~/components/ui/StandardSelectInput"
 import { TRPCClientError } from "@trpc/client"
+import { StandardImageInput } from "~/components/ui/StandardImageInput"
+import { useUploadThing } from "~/utils/uploadthing"
 
 type EditParticipantFormFields = {
     CI: string,
     birthDate: Date,
     email: string,
     firstname: string,
-    imageURL: string,
     institution: {
         ISO: number;
     },
@@ -26,6 +27,19 @@ type EditParticipantFormFields = {
 
 export default function EditParticipant() {
     const router = useRouter()
+
+    const { startUpload } = useUploadThing(
+        "imageUploader",
+        {
+            onUploadError: () => {
+                toast({
+                    title: "Ocurrió un error mientras se guardaba la imágen",
+                    colorScheme: "red",
+                    isClosable: true
+                })
+            },
+        }
+    )
 
     const { query } = router
 
@@ -37,6 +51,8 @@ export default function EditParticipant() {
     // for the getParticipant route is NaN, which gives an error.
     // The solution is pass another number, which is impossible to exists, or use an string as id.
     const participant = api.participants.getParticipant.useQuery(query.participantCI as string ?? "")
+
+    const [imageFile, setImageFile] = useState<File | null>(null)
 
     const [formIsSubmitting, setFormIsSubmitting] = useState(false)
     const [CIInput, setCIInput] = useState("")
@@ -65,9 +81,14 @@ export default function EditParticipant() {
             setTelephoneInput(telephone)
     }
 
+    // Reset file, when the data of of the participant changes
     useEffect(() => {
         if (participant?.data) {
-            resetFields(participant.data)
+            // const { ...rest } = participant.data
+
+            resetFields({
+                ...participant.data,
+            })
         }
     }, [participant?.data])
 
@@ -76,12 +97,34 @@ export default function EditParticipant() {
     async function handleUpdateParticipant(e: FormEvent<HTMLDivElement>) {
         e.preventDefault()
 
+        // In the future, check if the images are equal
+
+        if (!participant?.data) {
+            return
+        }
+
         const [yyyy, mm, dd] = birthdateInput.split("-")
 
         // Check if the data on the modification is equal, don't make the request of change, because it will
         // mean extra innecesary request.
         setFormIsSubmitting(true)
         try {
+            let image = undefined;
+
+            // Also should delete the image from the database
+            if (imageFile) {
+                const data = await startUpload([imageFile])
+
+                if (data && data.length > 0) {
+                    if (data[0]?.url) {
+                        image = {
+                            imageURL: data[0].url,
+                            imageFileKey: data[0].key
+                        }
+                    }
+                }
+            }
+
             await updateParticipant.mutateAsync({
                 CI: query?.participantCI as string,
                 data: {
@@ -90,10 +133,11 @@ export default function EditParticipant() {
                     lastname: lastNameInput,
                     telephone: telephoneInput,
                     email: emailInput,
-                    imageURL: "http://localhost:5000",
                     birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
-                    institution: institutionInput
-                }
+                    institution: institutionInput,
+                    image
+                },
+                previousImageFileKey: participant.data.image?.fileKey
             })
     
             await router.push("/participantes")
@@ -106,6 +150,13 @@ export default function EditParticipant() {
                     status: 'error'
                 })
             }
+
+            toast({
+                title: 'Error en el servidor',
+                description: 'Contactese con el soporte técnico',
+                isClosable: true,
+                status: 'error'
+            })
 
             if (participant.data) {
                 resetFields(participant.data)
@@ -147,7 +198,7 @@ export default function EditParticipant() {
                             !text-2xl
                             text-gray-600"
                     >
-                        Agregar participante
+                        Editar participante
                     </Heading>
                 </Flex>
                 <Grid
@@ -162,9 +213,20 @@ export default function EditParticipant() {
                 >
                     <GridItem
                         colSpan={2}
+                        className="
+                            flex
+                            items-center
+                            justify-center"
                     >
-                        <Input
-                            type="file"
+                        <StandardImageInput
+                            imageFile={imageFile}
+                            imageURL={participant?.data?.image?.imageURL}
+                            alt={`Foto de perfíl de ${nameInput} ${lastNameInput}`}
+                            onChange={(e) => {
+                                if (e.target.files?.[0]) {
+                                    setImageFile(e.target.files[0])
+                                }
+                            }}
                         />
                     </GridItem>
                     <GridItem

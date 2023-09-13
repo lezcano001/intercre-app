@@ -1,15 +1,23 @@
 import { Box, FormLabel, VisuallyHiddenInput } from "@chakra-ui/react";
 import Image from 'next/image';
 import { type ChangeEventHandler } from "react";
+import { DEFAULT_USER_IMAGE_URL } from "~/utils/constants";
 
 interface StandardImageInputProps {
-    imageLabel: string;
+    alt: string;
     name?: string;
-    currentImageURL: string;
+    imageFile: File | null;
     onChange: ChangeEventHandler<HTMLInputElement>;
+    imageURL?: string;
 }
 
-export function StandardImageInput({ imageLabel, currentImageURL, name, onChange }: StandardImageInputProps) {
+export function StandardImageInput({ alt, imageFile, name, onChange, imageURL }: StandardImageInputProps) {
+    const currentImageURL = imageFile
+        ? URL.createObjectURL(imageFile)
+        : imageURL
+        ? imageURL
+        : DEFAULT_USER_IMAGE_URL
+
     return (
         <FormLabel
             className="
@@ -28,8 +36,8 @@ export function StandardImageInput({ imageLabel, currentImageURL, name, onChange
                     h-full"
             >
                 <Image
+                    alt={alt}
                     src={currentImageURL}
-                    alt={imageLabel}
                     className="
                         absolute"
                     fill
@@ -59,7 +67,7 @@ export function StandardImageInput({ imageLabel, currentImageURL, name, onChange
                     h-10
                     font-bold"
             >
-                Cambiar Imagen
+                {currentImageURL === DEFAULT_USER_IMAGE_URL ? "Agregar Imagen" : "Cambiar Imagen"}
             </span>
         </FormLabel>
     )

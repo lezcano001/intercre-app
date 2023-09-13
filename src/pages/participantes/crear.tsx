@@ -11,13 +11,14 @@ import { StandardInput } from "~/components/ui/StandardInput";
 import { StandardImageInput } from "~/components/ui/StandardImageInput";
 import { StandardSelectInput } from "~/components/ui/StandardSelectInput";
 import { TRPCClientError } from "@trpc/client";
+import { useUploadThing } from "~/utils/uploadthing";
 
 export default function CreateParticipant() {
     const toast = useToast()
 
     const getAvailableInstitutions = api.institutions.getAvailableInstitutions.useQuery()
     
-    const [currentImageURL, setCurrentImageURL] = useState("")
+    const [imageFile, setImageFile] = useState<File | null>(null)
 
     const [formIsSubmitting, setFormIsSubmitting] = useState(false)
     const [CIInput, setCIInput] = useState("")
@@ -28,6 +29,7 @@ export default function CreateParticipant() {
     const [emailInput, setEmailInput] = useState("")
     const [telephoneInput, setTelephoneInput] = useState("")
 
+    // Set the first available option as the default
     useEffect(() => {
         if (getAvailableInstitutions?.data && getAvailableInstitutions.data.length > 0) {
             const defaultInstitution = getAvailableInstitutions.data[0]!
@@ -40,6 +42,19 @@ export default function CreateParticipant() {
 
     const router = useRouter()
 
+    const { startUpload } = useUploadThing(
+        "imageUploader",
+        {
+            onUploadError: () => {
+                toast({
+                    title: "Ocurrió un error mientras se guardaba la imágen",
+                    colorScheme: "red",
+                    isClosable: true
+                })
+            },
+        }
+    )
+
     async function handleCreateParticipant(e: FormEvent<HTMLDivElement>) {
         e.preventDefault()
 
@@ -47,13 +62,29 @@ export default function CreateParticipant() {
 
         setFormIsSubmitting(true)
         try {
+            let image = undefined;
+
+            // Also should delete the image from the database
+            if (imageFile) {
+                const data = await startUpload([imageFile])
+
+                if (data && data.length > 0) {
+                    if (data[0]?.url) {
+                        image = {
+                            imageURL: data[0].url,
+                            imageFileKey: data[0].key
+                        }
+                    }
+                }
+            }
+            
             await createParticipant.mutateAsync({
                 ci: CIInput,
                 firstname: nameInput,
                 lastname: lastNameInput,
                 telephone: telephoneInput,
                 email: emailInput,
-                imageURL: "http://localhost:5000",
+                image,
                 birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
                 institution: institutionInput
             })
@@ -121,15 +152,15 @@ export default function CreateParticipant() {
                         colSpan={2}
                         className="
                             flex
+                            items-center
                             justify-center"
                     >
                         <StandardImageInput
-                            currentImageURL={currentImageURL === "" ? "/fallback-participant-profile-image.svg" : currentImageURL}
-                            imageLabel=""
+                            imageFile={imageFile}
+                            alt={`Foto de perfíl de ${nameInput} ${lastNameInput}`}
                             onChange={(e) => {
-                                // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-                                if (e.target.files && e.target.files[0]) {
-                                    setCurrentImageURL(URL.createObjectURL(e.target.files[0]))
+                                if (e.target.files?.[0]) {
+                                    setImageFile(e.target.files[0])
                                 }
                             }}
                         />
