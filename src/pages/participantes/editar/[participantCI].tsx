@@ -25,7 +25,7 @@ type EditParticipantFormFields = {
     },
     lastname: string,
     telephone: string,
-    gender: keyof typeof GENDERS_MAP,
+    gender: (typeof GENDERS)[number],
     isStudent: boolean;
 }
 
@@ -79,7 +79,7 @@ export default function EditParticipant() {
     const [institutionInput, setInstitutionInput] = useState(10)
     const [emailInput, setEmailInput] = useState("")
     const [telephoneInput, setTelephoneInput] = useState("")
-    const [genderInput, setGenderInput] = useState<keyof typeof GENDERS_MAP>(GENDERS[0])
+    const [genderInput, setGenderInput] = useState<(typeof GENDERS)[number]>(GENDERS[0])
     const [isStudent, setIsStudent] = useState(false)
 
     const [zodErrors, setZodErrors] = useState<FieldsErrors>({} as FieldsErrors)
@@ -113,7 +113,7 @@ export default function EditParticipant() {
 
             resetFields({
                 ...participant.data,
-                gender: participant.data.gender.value as keyof typeof GENDERS_MAP,
+                gender: participant.data.gender.value as (typeof GENDERS)[number],
                 isStudent: participant.data.participantType === "STUDENT"
             })
         }
@@ -202,7 +202,7 @@ export default function EditParticipant() {
             if (participant.data) {
                 resetFields({
                     ...participant.data,
-                    gender: participant.data.gender.value as keyof typeof GENDERS_MAP,
+                    gender: participant.data.gender.value as (typeof GENDERS)[number],
                     isStudent: participant.data.participantType === "STUDENT"
                 })
             }
@@ -318,7 +318,7 @@ export default function EditParticipant() {
                                 }
                             })}
                             value={genderInput}
-                            onChange={e => setGenderInput(e.target.value as keyof typeof GENDERS_MAP)}
+                            onChange={e => setGenderInput(e.target.value as (typeof GENDERS)[number])}
                             isError={zodErrors.gender}
                         />
                     </GridItem>
