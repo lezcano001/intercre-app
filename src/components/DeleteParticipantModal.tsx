@@ -62,7 +62,8 @@ export function DeleteParticipantModal({ participantCI, onSuccessRedirectTo }: D
             <Button
                 colorScheme="red"
                 onClick={onOpen}
-                >
+                isLoading={isLoading}
+            >
                 Eliminar
             </Button>
             <Modal
