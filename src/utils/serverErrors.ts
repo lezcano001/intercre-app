@@ -13,3 +13,24 @@ export function InternalServerError() {
         message: "Error del servidor. Intentelo de nuevo más tarde."
     })
 }
+
+export function ParticipantNotFound() {
+    return new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Participante no encontrado'
+    })
+}
+
+export function ParticipationNotFound() {
+    return new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'La inscripción no ha sido encontrada'
+    })
+}
+
+export function UnauthorizedError() {
+    return new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'No tienes los suficientes permisos para realizar esta acción'
+    })
+}

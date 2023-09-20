@@ -1,4 +1,4 @@
-import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, Button } from "@chakra-ui/react";
+import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, Button, Spinner, Text } from "@chakra-ui/react";
 import { api } from '~/utils/api'
 
 import NextLink from 'next/link'
@@ -8,6 +8,7 @@ import { DeleteParticipantModal } from "./DeleteParticipantModal";
 // Add the sorting to the table headers
 export function ParticipantsTable() {
     const participants = api.participants.getAll.useQuery()
+
     return (
         <TableContainer>
             <Table variant='simple'>
@@ -24,33 +25,69 @@ export function ParticipantsTable() {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {participants?.data?.map(participant => (
-                        <Tr
-                            key={participant.CI}
-                        >
-                            <Td>{participant.CI}</Td>
-                            <Td>{participant.firstname + ' ' + participant.lastname}</Td>
-                            <Td isNumeric>
+                    {participants.isFetching ? (
+                        <Tr>
+                            <Td
+                                colSpan={3}
+                            >
                                 <Flex
                                     className="
-                                        gap-2.5
-                                        justify-end"
+                                        py-12
+                                        w-full
+                                        justify-center
+                                        gap-6
+                                        text-gray-600"
                                 >
-                                    <Button
-                                        as={NextLink}
-                                        href={`/participantes/${participant.CI}`}
+                                    <Text>Cargando lista de participantes</Text>
+                                    <Spinner />
+                                </Flex>
+                            </Td>
+                        </Tr>
+                    ) : (
+                        participants?.data && participants.data.length > 0 ? (participants.data.map(participant => (
+                            <Tr
+                                key={participant.CI}
+                            >
+                                <Td>{participant.CI}</Td>
+                                <Td>{participant.firstname + ' ' + participant.lastname}</Td>
+                                <Td isNumeric>
+                                    <Flex
+                                        className="
+                                            gap-2.5
+                                            justify-end"
                                     >
-                                        Ver
-                                    </Button>
-                                    <Button
-                                        as={NextLink}
-                                        href={"/participantes/editar/" + participant.CI}
-                                    >
-                                        Editar
-                                    </Button>
-                                    <DeleteParticipantModal
-                                        participantCI={String(participant.CI)}
-                                    />
+                                        <Button
+                                            as={NextLink}
+                                            href={`/participantes/${participant.CI}`}
+                                        >
+                                            Ver
+                                        </Button>
+                                        <Button
+                                            as={NextLink}
+                                            href={"/participantes/editar/" + participant.CI}
+                                        >
+                                            Editar
+                                        </Button>
+                                        <DeleteParticipantModal
+                                            participantCI={String(participant.CI)}
+                                        />
+                                    </Flex>
+                                </Td>
+                            </Tr>
+                        ))
+                    ) : (
+                        <Tr>
+                            <Td
+                                colSpan={3}
+                            >
+                                <Flex
+                                    className="
+                                        w-full
+                                        py-10
+                                        justify-center
+                                        text-gray-600"
+                                >
+                                    No hay participantes registrados
                                 </Flex>
                             </Td>
                         </Tr>

@@ -21,6 +21,7 @@
     "@trpc/next": "^10.34.0",
     "@trpc/react-query": "^10.34.0",
     "@trpc/server": "^10.34.0",
+    "@uidotdev/usehooks": "^2.2.0",
     "@uploadthing/react": "^5.5.0",
     "bcrypt": "^5.1.1",
     "dayjs": "^1.11.9",

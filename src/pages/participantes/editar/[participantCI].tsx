@@ -12,6 +12,7 @@ import { StandardSelectInput } from "~/components/ui/StandardSelectInput"
 import { TRPCClientError } from "@trpc/client"
 import { StandardImageInput } from "~/components/ui/StandardImageInput"
 import { useUploadThing } from "~/utils/uploadthing"
+import { GENDERS, GENDERS_MAP } from "~/utils/constants"
 import { StandardSwitchInput } from "~/components/ui/StandardSwitchInput"
 
 type EditParticipantFormFields = {
@@ -23,7 +24,22 @@ type EditParticipantFormFields = {
         ISO: number;
     },
     lastname: string,
-    telephone: string
+    telephone: string,
+    gender: keyof typeof GENDERS_MAP,
+    isStudent: boolean;
+}
+
+type FieldsErrors = {
+    ci?: string;
+    firstname?: string;
+    lastname?: string;
+    telephone?: string;
+    email?: string;
+    image?: string;
+    birthDate?: string;
+    institution?: string;
+    gender?: string;
+    isStudent?: string;
 }
 
 export default function EditParticipant() {
@@ -63,6 +79,10 @@ export default function EditParticipant() {
     const [institutionInput, setInstitutionInput] = useState(10)
     const [emailInput, setEmailInput] = useState("")
     const [telephoneInput, setTelephoneInput] = useState("")
+    const [genderInput, setGenderInput] = useState<keyof typeof GENDERS_MAP>(GENDERS[0])
+    const [isStudent, setIsStudent] = useState(false)
+
+    const [zodErrors, setZodErrors] = useState<FieldsErrors>({} as FieldsErrors)
 
     function resetFields({
         CI,
@@ -71,7 +91,9 @@ export default function EditParticipant() {
         firstname,
         institution,
         lastname,
-        telephone
+        telephone,
+        gender,
+        isStudent
     }: EditParticipantFormFields) {
             setCIInput(CI)
             setNameInput(firstname)
@@ -80,6 +102,8 @@ export default function EditParticipant() {
             setInstitutionInput(institution.ISO)
             setEmailInput(email)
             setTelephoneInput(telephone)
+            setGenderInput(gender)
+            setIsStudent(isStudent)
     }
 
     // Reset file, when the data of of the participant changes
@@ -89,6 +113,8 @@ export default function EditParticipant() {
 
             resetFields({
                 ...participant.data,
+                gender: participant.data.gender.value as keyof typeof GENDERS_MAP,
+                isStudent: participant.data.participantType === "STUDENT"
             })
         }
     }, [participant?.data])
@@ -127,46 +153,63 @@ export default function EditParticipant() {
             }
 
             await updateParticipant.mutateAsync({
-                CI: query?.participantCI as string,
-                data: {
-                    ci: CIInput,
-                    firstname: nameInput,
-                    lastname: lastNameInput,
-                    telephone: telephoneInput,
-                    email: emailInput,
-                    birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
-                    institution: institutionInput,
-                    image
-                },
+                currentCI: query?.participantCI as string,
+                ci: CIInput,
+                firstname: nameInput,
+                lastname: lastNameInput,
+                telephone: telephoneInput,
+                email: emailInput,
+                birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
+                institution: institutionInput,
+                image,
+                gender: genderInput,
+                isStudent,
                 previousImageFileKey: participant.data.image?.fileKey
             })
     
             await router.push("/participantes")
         } catch (err) {
             if (err instanceof TRPCClientError) {
+                const errData = err.data as {
+                    zodError: {
+                        fieldErrors: Record<string, string[]>
+                    } | undefined
+                }
+
+                if (errData.zodError) {
+                    const errorObject = Object.fromEntries(Object.entries(errData.zodError.fieldErrors).map(([key, value, ...rest]) => [key, value])) as FieldsErrors
+
+                    setZodErrors({
+                        ...errorObject
+                    })
+                } else {
+                    toast({
+                        title: err.message,
+                        position: 'bottom-right',
+                        isClosable: true,
+                        status: 'error'
+                    })
+                }
+            } else {
                 toast({
-                    title: err.message,
-                    position: 'bottom-right',
+                    title: 'Error en el servidor',
+                    description: 'Contactese con el soporte técnico',
                     isClosable: true,
                     status: 'error'
                 })
             }
 
-            toast({
-                title: 'Error en el servidor',
-                description: 'Contactese con el soporte técnico',
-                isClosable: true,
-                status: 'error'
-            })
-
             if (participant.data) {
-                resetFields(participant.data)
+                resetFields({
+                    ...participant.data,
+                    gender: participant.data.gender.value as keyof typeof GENDERS_MAP,
+                    isStudent: participant.data.participantType === "STUDENT"
+                })
             }
         }
 
         setFormIsSubmitting(false)
     }
-
 
     return (
         <DashboardLayout>
@@ -246,8 +289,7 @@ export default function EditParticipant() {
                             value={CIInput}
                             onChange={e => setCIInput(e.target.value)}
                             label="Documento de Identidad:"
-                            containerClassName="
-                                max-w-md"
+                            isError={zodErrors.ci}
                         />
                     </GridItem>
                     <GridItem>
@@ -255,6 +297,7 @@ export default function EditParticipant() {
                             label="Nombres:"
                             value={nameInput}
                             onChange={e => setNameInput(e.target.value)}
+                            isError={zodErrors.firstname}
                         />
                     </GridItem>
                     <GridItem>
@@ -262,6 +305,21 @@ export default function EditParticipant() {
                             label="Apellidos:"
                             value={lastNameInput}
                             onChange={e => setLastNameInput(e.target.value)}
+                            isError={zodErrors.lastname}
+                        />
+                    </GridItem>
+                    <GridItem>
+                        <StandardSelectInput
+                            label="Sexo:"
+                            options={GENDERS.map((gender) => {
+                                return {
+                                    label: GENDERS_MAP[gender],
+                                    value: gender
+                                }
+                            })}
+                            value={genderInput}
+                            onChange={e => setGenderInput(e.target.value as keyof typeof GENDERS_MAP)}
+                            isError={zodErrors.gender}
                         />
                     </GridItem>
                     <GridItem>
@@ -270,6 +328,7 @@ export default function EditParticipant() {
                             value={birthdateInput}
                             onChange={e => setBirthdateInput(e.target.value)}
                             type="date"
+                            isError={zodErrors.birthDate}
                         />
                     </GridItem>
                     <GridItem>
@@ -285,6 +344,7 @@ export default function EditParticipant() {
                             }
                             value={institutionInput}
                             onChange={e => setInstitutionInput(parseInt(e.target.value))}
+                            isError={zodErrors.institution}
                         />
                     </GridItem>
                     <GridItem>
@@ -292,6 +352,7 @@ export default function EditParticipant() {
                             label="Email:"
                             value={emailInput}
                             onChange={e => setEmailInput(e.target.value)}
+                            isError={zodErrors.email}
                         />
                     </GridItem>
                     <GridItem>
@@ -299,6 +360,7 @@ export default function EditParticipant() {
                             label="Teléfono:"
                             value={telephoneInput}
                             onChange={e => setTelephoneInput(e.target.value)}
+                            isError={zodErrors.telephone}
                         />
                     </GridItem>
                     <GridItem

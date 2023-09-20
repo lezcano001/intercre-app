@@ -4,37 +4,79 @@ import { z } from 'zod'
 
 import {
     createTRPCRouter,
-    protectedProcedure
+    protectedProcedure,
 } from '~/server/api/trpc'
-import { CIUniqueConstraintViolationError, InternalServerError } from '~/utils/serverErrors'
+import { CIUniqueConstraintViolationError, InternalServerError, ParticipantNotFound, UnauthorizedError } from '~/utils/serverErrors'
 import { TRPCError } from '@trpc/server'
+import { GENDERS, GENDERS_CATEGORIES, GENDERS_MAP } from '~/utils/constants'
 
 // The publicProcedure is temporary because i do not implemented yet an authentication system.
 
 // Add the try...catch blocks to catch the errors
 export const participantsRouter = createTRPCRouter({
-    getAll: protectedProcedure.query(({ ctx }) => {
-        return ctx.prisma.participant.findMany()
+    getAll: protectedProcedure.query(async ({ ctx }) => {
+        const { participantCI, institutionISO } = ctx.session.user
+
+        return ctx.prisma.participant.findMany({
+            where: {
+                AND: [
+                    {
+                        CI: {
+                            not: participantCI
+                        }
+                    },
+                    {
+                        institutionISO
+                    }
+                ]
+            }
+        });
     }),
     createParticipant: protectedProcedure.input(z.object({
-        ci: z.string().max(15),
-        firstname: z.string(),
-        lastname: z.string(),
-        telephone: z.string().max(10),
-        email: z.string().email(),
+        ci: z.string().min(1, {
+            message: 'Este campo es requerido'
+        }).max(15, {
+            message: 'Este campo no puede tener más de 15 dígitos'
+        }),
+        firstname: z.string().min(1, {
+            message: 'Este campo es requerido'
+        }),
+        lastname: z.string().min(1, {
+            message: 'Este campo es requerido'
+        }),
+        telephone: z.string().max(10, {
+            message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
+        }).min(10, {
+            message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
+        }),
+        email: z.string().email({
+            message: 'Dirección de correo electrónico inválida'
+        }),
         image: z.object({
             imageFileKey: z.string(),
             imageURL: z.string().url(),
         }).optional(),
-        birthDate: z.date(),
-        institution: z.number()
+        birthDate: z.date({
+            required_error: 'Este campo es requirido',
+            invalid_type_error: 'Debe ingresar una fecha válida'
+        }),
+        institution: z.number(),
+        gender: z.enum(GENDERS),
+        isStudent: z.boolean().optional()
     })).mutation(async ({ ctx, input }) => {
-        const { ci: CI, institution: institutionISO, image, ...rest } = input
-        
+        const { ci: CI, institution: institutionISO, image, isStudent = false, ...rest } = input
+
+        const { institutionISO: userInstitutionISO } = ctx.session.user
+
+        if (userInstitutionISO !== institutionISO) {
+            throw UnauthorizedError()
+        }
+
         try {
-            const participant = await ctx.prisma.participant.create({
+            const createdParticipant = await ctx.prisma.participant.create({
                 data: {
                     ...rest,
+                    participantType: isStudent ? 'STUDENT' : 'TEACHER',
                     CI,
                     institutionISO,
                     image: image ? {
@@ -42,16 +84,18 @@ export const participantsRouter = createTRPCRouter({
                             imageURL: image.imageURL,
                             fileKey: image.imageFileKey
                         }
-                    } : undefined
+                    } : undefined,
                 }
             })
 
-            return participant.CI
+            return createdParticipant.CI
         } catch (err) {
             if (err instanceof PrismaClientKnownRequestError) {
                 if (err.code === "P2002") {
                     throw CIUniqueConstraintViolationError()
                 }
+
+                console.log(PrismaClientKnownRequestError)
             }
 
             throw InternalServerError()
@@ -64,7 +108,19 @@ export const participantsRouter = createTRPCRouter({
     ).mutation(async ({ ctx, input }) => {
         const { CI } = input
 
+        const { institutionISO } = ctx.session.user
+
         try {
+            const participant = await ctx.prisma.participant.findUnique({
+                where: {
+                    CI
+                }
+            })
+
+            if (participant?.institutionISO !== institutionISO) {
+                throw UnauthorizedError()
+            }
+
             const deletedParticipant = await ctx.prisma.participant.delete({
                 where: {
                     CI
@@ -103,10 +159,22 @@ export const participantsRouter = createTRPCRouter({
     }),
     getParticipant: protectedProcedure.input(
         z.string().max(15)
-    ).query(({ input, ctx }) => {
-        return ctx.prisma.participant.findUnique({
+    ).query(async ({ input, ctx }) => {
+        const { participantCI, institutionISO } = ctx.session.user
+
+        const data = await ctx.prisma.participant.findUnique({
             where: {
-                CI: input
+                CI: input,
+                AND: [
+                    {
+                        CI: {
+                            not: participantCI
+                        }
+                    },
+                    {
+                        institutionISO
+                    }
+                ]
             },
             include: {
                 institution: true,
@@ -115,28 +183,65 @@ export const participantsRouter = createTRPCRouter({
                         imageURL: true,
                         fileKey: true
                     }
-                }
+                },
             }
         })
+
+        if (!data) {
+            throw ParticipantNotFound()
+        }
+
+        return {
+            ...data,
+            gender: {
+                label: GENDERS_MAP[data.gender as keyof typeof GENDERS_MAP],
+                value: data.gender as string,
+            }
+        }
     }),
     updateParticipant: protectedProcedure.input(z.object({
-        CI: z.string().max(15),
-        data: z.object({
-            ci: z.string().max(15),
-            firstname: z.string(),
-            lastname: z.string(),
-            telephone: z.string().max(10),
-            email: z.string().email(),
-            image: z.object({
-                imageFileKey: z.string(),
-                imageURL: z.string().url()
-            }).optional(),
-            birthDate: z.date(),
-            institution: z.number()
+        currentCI: z.string().min(1, {
+            message: 'Este campo es requerido'
+        }).max(15),
+        ci: z.string().min(1, {
+            message: 'Este campo es requerido'
+        }).max(15, {
+            message: 'Este campo no puede tener más de 15 dígitos'
         }),
+        firstname: z.string().min(1, {
+            message: 'Este campo es requerido'
+        }),
+        lastname: z.string().min(1, {
+            message: 'Este campo es requerido'
+        }),
+        telephone: z.string().max(10, {
+            message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
+        }).min(10, {
+            message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
+        }),
+        email: z.string().email({
+            message: 'Dirección de correo electrónico inválida'
+        }),
+        image: z.object({
+            imageFileKey: z.string(),
+            imageURL: z.string().url()
+        }).optional(),
+        birthDate: z.date({
+            required_error: 'Este campo es requirido',
+            invalid_type_error: 'Debe ingresar una fecha válida'
+        }),
+        institution: z.number(),
+        gender: z.enum(GENDERS),
+        isStudent: z.boolean(),
         previousImageFileKey: z.string().optional(),
     })).mutation(async ({ ctx, input }) => {
-        const { CI, data: {ci: newCI, institution: institutionISO, image, ...rest}, previousImageFileKey } = input
+        const { currentCI: CI, ci: newCI, institution: institutionISO, image, isStudent, previousImageFileKey, ...rest } = input
+
+        const { institutionISO: userInstitutionISO } = ctx.session.user
+
+        if (userInstitutionISO !== institutionISO) {
+            throw UnauthorizedError()
+        }
 
         /*
             the previous image can be:
@@ -159,6 +264,7 @@ export const participantsRouter = createTRPCRouter({
                 },
                 data: {
                     ...rest,
+                    participantType: isStudent ? "STUDENT" : "TEACHER",
                     CI: newCI,
                     institutionISO,
                     image: image
@@ -193,4 +299,83 @@ export const participantsRouter = createTRPCRouter({
             throw InternalServerError()
         }
     }),
+    searchParticipant: protectedProcedure.input(z.object({
+        searchUsers: z.boolean().optional(),
+        searchText: z.string(),
+        roleId: z.string(),
+        aceptedGenderCategory: z.enum(GENDERS_CATEGORIES).optional(),
+        restrictGenders: z.boolean().optional(),
+        allowedParticipantsType: z.enum(["STUDENT", "TEACHER"]).optional()
+    })).query(async ({ ctx, input }) => {
+        const {
+            searchText,
+            roleId,
+            searchUsers = false,
+            aceptedGenderCategory,
+            restrictGenders = false,
+            allowedParticipantsType
+        } = input
+
+        const { institutionISO } = ctx.session.user
+
+        if (!aceptedGenderCategory) {
+            throw new TRPCError({
+                message: 'Error con la conexión a internet. Por favor inténtelo más tarde',
+                code: 'BAD_REQUEST'
+            })
+        }
+
+        const searchResults = await ctx.prisma.participant.findMany({
+            where: {
+                AND: [
+                    {
+                        OR: [
+                            {
+                                CI: {
+                                    contains: searchText
+                                }
+                            },
+                            {
+                                firstname: {
+                                    contains: searchText
+                                }
+                            },
+                            {
+                                lastname: {
+                                    contains: searchText
+                                }
+                            },
+                        ]
+                    },
+                    {
+                        institutionISO
+                    },
+                    {
+                        User: searchUsers ? undefined : null
+                    },
+                    {
+                        NOT: {
+                            SquadList: {
+                                some: {
+                                    roleId: roleId
+                                }
+                            }
+                        }
+                    },
+                    {
+                        gender: aceptedGenderCategory === "MIXED" || !restrictGenders ? undefined : aceptedGenderCategory
+                    },
+                    {
+                        participantType: allowedParticipantsType
+                    }
+                ]
+            },
+            orderBy: {
+                CI: 'asc'               
+            },
+            take: 4
+        })
+
+        return searchResults
+    })
 })

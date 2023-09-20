@@ -24,6 +24,7 @@ declare module "next-auth" {
     user: DefaultSession["user"] & {
       id: string;
       participantCI: string;
+      institutionISO: number;
       // ...other properties
       // role: UserRole;
     };
@@ -33,6 +34,7 @@ declare module "next-auth" {
   interface User {
     id: string;
     participantCI: string;
+    institutionISO: number;
     // ...other properties
     // role: UserRole;
   }
@@ -61,16 +63,21 @@ export const authOptions: NextAuthOptions = {
         session.user = {
           ...session.user,
           id: token.user!.id,
-          participantCI: token.user!.participantCI
+          participantCI: token.user!.participantCI,
+          institutionISO: token.user!.institutionISO
         }
       }
 
       session.error = token.error
       return session
     },
+
+    // Check this function for the bug
+    // The current bug is that the token is expired before that is intended, and
+    // seems to be no refreshed at all.
     async jwt({ token, user }) {
       if (user) {
-        const authUser = { participantCI: user.participantCI, id: user.id};
+        const authUser = { participantCI: user.participantCI, id: user.id, institutionISO: user.institutionISO};
 
         const accessToken = await jwtHelper.createAccessToken(authUser)
         const refreshToken = await jwtHelper.createRefreshToken(authUser)
@@ -156,7 +163,11 @@ export const authOptions: NextAuthOptions = {
               participantCI: ci
             },
             include: {
-              participant: true
+              participant: {
+                include: {
+                  institution: true
+                }
+              }
             }
           })
 
@@ -170,7 +181,8 @@ export const authOptions: NextAuthOptions = {
                 participantCI: user.participantCI,
                 email: user.email,
                 image: user.image,
-                name: `${user.participant.firstname} ${user.participant.lastname}`
+                name: `${user.participant.firstname} ${user.participant.lastname}`,
+                institutionISO: user.participant.institutionISO
               }
             }
           }
