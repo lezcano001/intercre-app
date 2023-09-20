@@ -73,7 +73,7 @@ export default function SquadList() {
                             text-gray-600
                             !text-2xl"
                     >
-                        {disciplineData?.data?.name} {GENDERS_MAP[disciplineData?.data?.genreCategory as keyof typeof GENDERS_MAP]} - Lista de Buena Fe
+                        {disciplineData?.data?.name} { disciplineData?.data?.genreCategory ? GENDERS_MAP[disciplineData?.data?.genreCategory as keyof typeof GENDERS_MAP] : ""} - Lista de Buena Fe
                     </Heading>
                 </Flex>
                 {squadData?.data ? squadData.data.map((role) => {
