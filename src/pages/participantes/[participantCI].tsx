@@ -10,6 +10,7 @@ import { DeleteParticipantModal } from "~/components/DeleteParticipantModal";
 import { StandardInputViewer } from "~/components/ui/StandardInputViewer";
 import { StandardImageInputViewer } from "~/components/ui/StandardImageInputViewer";
 import { DEFAULT_USER_IMAGE_URL } from "~/utils/constants";
+import { StandardSwitchInputViewer } from "~/components/ui/StandardSwitchInputViewer";
 
 export default function ParticipantCI() {
     const { query } = useRouter()
@@ -92,11 +93,15 @@ export default function ParticipantCI() {
                     <GridItem
                         colSpan={2}
                     >
+                        <StandardSwitchInputViewer
+                            label="Es estudiante:"
+                            isChecked={participant?.data?.participantType === "STUDENT"}
+                        />
+                    </GridItem>
+                    <GridItem>
                         <StandardInputViewer
                             label="Documento de Identidad:"
                             value={participant?.data?.CI.toString() ?? ""}
-                            containerClassName="
-                                max-w-md"
                         />
                     </GridItem>
                     <GridItem>
@@ -109,6 +114,12 @@ export default function ParticipantCI() {
                         <StandardInputViewer
                             label="Apellidos:"
                             value={participant?.data?.lastname ?? ""}
+                        />
+                    </GridItem>
+                    <GridItem>
+                        <StandardInputViewer
+                            label="Sexo:"
+                            value={participant?.data?.gender.label ?? ""}
                         />
                     </GridItem>
                     <GridItem>
