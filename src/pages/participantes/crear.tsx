@@ -12,6 +12,7 @@ import { StandardImageInput } from "~/components/ui/StandardImageInput";
 import { StandardSelectInput } from "~/components/ui/StandardSelectInput";
 import { TRPCClientError } from "@trpc/client";
 import { useUploadThing } from "~/utils/uploadthing";
+import { StandardSwitchInput } from "~/components/ui/StandardSwitchInput";
 
 export default function CreateParticipant() {
     const toast = useToast()
@@ -168,6 +169,16 @@ export default function CreateParticipant() {
                     <GridItem
                         colSpan={2}
                     >
+                        <StandardSwitchInput
+                            label="Es estudiante:"
+                            id="isStudent"
+                            isChecked={isStudent}
+                            onChange={e => {
+                                setIsStudent(e.target.checked)
+                            }}
+                        />
+                    </GridItem>
+                    <GridItem>
                         <StandardInput
                             value={CIInput}
                             onChange={e => setCIInput(e.target.value)}

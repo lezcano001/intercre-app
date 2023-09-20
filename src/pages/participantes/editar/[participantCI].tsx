@@ -1,4 +1,4 @@
-import { Flex, IconButton, Heading, Grid, GridItem, Button, Input, useToast } from "@chakra-ui/react"
+import { Flex, IconButton, Heading, Grid, GridItem, Button, useToast } from "@chakra-ui/react"
 import { RiArrowLeftLine } from "react-icons/ri"
 import { DashboardLayout } from "~/components/layouts/DashboardLayout"
 import { StandardInput } from "~/components/ui/StandardInput"
@@ -12,6 +12,7 @@ import { StandardSelectInput } from "~/components/ui/StandardSelectInput"
 import { TRPCClientError } from "@trpc/client"
 import { StandardImageInput } from "~/components/ui/StandardImageInput"
 import { useUploadThing } from "~/utils/uploadthing"
+import { StandardSwitchInput } from "~/components/ui/StandardSwitchInput"
 
 type EditParticipantFormFields = {
     CI: string,
@@ -174,7 +175,6 @@ export default function EditParticipant() {
             >
                 <Flex
                     className="
-                        flex
                         items-center
                         gap-9
                         w-full
@@ -232,6 +232,16 @@ export default function EditParticipant() {
                     <GridItem
                         colSpan={2}
                     >
+                        <StandardSwitchInput
+                            label="Es estudiante:"
+                            id="isStudent"
+                            isChecked={isStudent}
+                            onChange={e => {
+                                setIsStudent(e.target.checked)
+                            }}
+                        />
+                    </GridItem>
+                    <GridItem>
                         <StandardInput
                             value={CIInput}
                             onChange={e => setCIInput(e.target.value)}
