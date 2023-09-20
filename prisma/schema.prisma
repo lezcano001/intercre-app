@@ -15,6 +15,15 @@ datasource db {
     url          = env("DATABASE_URL")
 }
 
+model User {
+    id            String      @id @default(cuid())
+    participant   Participant @relation(fields: [participantCI], references: [CI])
+    participantCI String      @unique
+    password      String
+
+    @@index([participantCI])
+}
+
 model Image {
     fileKey       String      @id
     imageURL      String
@@ -24,78 +33,120 @@ model Image {
     @@index([participantCI])
 }
 
+enum Gender {
+    MALE
+    FEMALE
+}
+
 model Participant {
-    CI             String      @id
-    firstname      String
-    lastname       String
-    telephone      String
-    email          String
-    birthDate      DateTime
-    institution    Institution @relation(fields: [institutionISO], references: [ISO])
-    institutionISO Int
-    User           User?
-    image          Image?
+    CI              String             @id
+    firstname       String
+    lastname        String
+    telephone       String
+    email           String
+    birthDate       DateTime
+    institution     Institution        @relation(fields: [institutionISO], references: [ISO])
+    institutionISO  Int
+    User            User?
+    image           Image?
+    gender          Gender
+    SquadList       SquadParticipant[]
+    Participation   Participation[]
+    participantType ParticipantsTypes
 
     @@index([institutionISO])
 }
 
 model Institution {
-    ISO          Int           @id
-    department   String
-    city         String
-    name         String
-    abbreviation String
-    Participants Participant[]
+    ISO            Int             @id
+    department     String
+    city           String
+    name           String
+    abbreviation   String
+    Participants   Participant[]
+    Participations Participation[]
 }
 
-// Necessary for Next auth
-model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
-    @@index([userId])
+// Available Genres categories
+// Useful for categories disciplines
+enum GenresCategories {
+    FEMALE
+    MALE
+    MIXED
 }
 
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// This register a participant of a squad to a discipline with its corresponding role
+model SquadParticipant {
+    // Participant
+    Participant    Participant    @relation(fields: [participantCI], references: [CI], onDelete: Cascade)
+    participantCI  String
+    // Participation
+    Participation  Participation  @relation(fields: [disciplineId, institutionISO], references: [disciplineId, institutionISO], onDelete: Cascade)
+    disciplineId   String
+    institutionISO Int
+    // Discipline Role
+    disciplineRole DisciplineRole @relation(fields: [roleId], references: [roleId], onDelete: Cascade)
+    roleId         String
 
-    @@index([userId])
+    @@id([participantCI, disciplineId, roleId])
+    @@index([participantCI])
+    @@index([roleId])
+    @@index([disciplineId, institutionISO])
 }
 
-model User {
-    id            String      @id @default(cuid())
-    email         String?     @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    participant   Participant @relation(fields: [participantCI], references: [CI])
-    participantCI String      @unique
-    password      String
+// This register the participation of an institution into an discipline
+model Participation {
+    // Discipline
+    discipline     Discipline  @relation(fields: [disciplineId], references: [disciplineId], onDelete: Cascade)
+    disciplineId   String
+    // Institution
+    institution    Institution @relation(fields: [institutionISO], references: [ISO], onDelete: Cascade)
+    institutionISO Int
+    // Registered By
+    registeredBy   Participant @relation(fields: [participantCI], references: [CI], onDelete: Cascade)
+    participantCI  String
 
+    SquadParticipants SquadParticipant[]
+
+    inscriptionDate DateTime @default(now())
+
+    @@id([disciplineId, institutionISO])
+    @@index([disciplineId])
+    @@index([institutionISO])
     @@index([participantCI])
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+// This define a new discipline
+model Discipline {
+    disciplineId    String           @id @default(cuid())
+    name            String
+    DisciplineRoles DisciplineRole[]
+    Participations  Participation[]
+    genreCategory   GenresCategories
+}
 
-    @@unique([identifier, token])
+enum AvailableRoles {
+    TEAM_MANAGER
+    PLAYER
+    COACHING_STAFF
+}
+
+enum ParticipantsTypes {
+    STUDENT
+    TEACHER
+}
+
+// This create a new role for a discipline
+model DisciplineRole {
+    roleId                 String             @unique @default(cuid())
+    discipline             Discipline         @relation(fields: [disciplineId], references: [disciplineId], onDelete: Cascade)
+    disciplineId           String
+    role                   AvailableRoles
+    restrictGenres         Boolean
+    participantsLimit      Int
+    SquadParticipants      SquadParticipant[]
+    allowedParticipantType ParticipantsTypes
+
+    @@id([disciplineId, role])
+    @@index([disciplineId])
 }
