@@ -10,7 +10,8 @@ export function Header() {
             as="header"
             className="
                 w-full
-                h-20
+                max-h-[5rem]
+                h-full
                 px-12
                 bg-white
                 border-b-[1px]
