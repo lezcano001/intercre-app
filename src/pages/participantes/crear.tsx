@@ -43,7 +43,7 @@ export default function CreateParticipant() {
     const [institutionInput, setInstitutionInput] = useState<number>(1)
     const [emailInput, setEmailInput] = useState("")
     const [telephoneInput, setTelephoneInput] = useState("")
-    const [genderInput, setGenderInput] = useState<keyof typeof GENDERS_MAP>(GENDERS[0])
+    const [genderInput, setGenderInput] = useState<(typeof GENDERS)[number]>(GENDERS[0])
     const [isStudent, setIsStudent] = useState(false)
 
     const [zodErrors, setZodErrors] = useState<FieldsErrors>({})
@@ -253,7 +253,7 @@ export default function CreateParticipant() {
                                 }
                             })}
                             value={genderInput}
-                            onChange={e => setGenderInput(e.target.value as keyof typeof GENDERS_MAP)}
+                            onChange={e => setGenderInput(e.target.value as (typeof GENDERS)[number])}
                             isError={zodErrors.gender}
                         />
                     </GridItem>
