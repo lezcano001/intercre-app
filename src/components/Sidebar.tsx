@@ -1,7 +1,7 @@
 import { Flex, VStack } from "@chakra-ui/react";
 import { Logotype } from "./Logotype";
 import { NavItem } from "./ui/NavItem";
-import { RiGroupLine } from 'react-icons/ri'
+import { RiBookLine, RiGroupLine } from 'react-icons/ri'
 
 export function Sidebar() {
     return (
@@ -24,6 +24,12 @@ export function Sidebar() {
                     icon={RiGroupLine}
                 >
                     Participantes
+                </NavItem>
+                <NavItem
+                    href="/inscripciones"
+                    icon={RiBookLine}
+                >
+                    Inscripciones
                 </NavItem>
             </VStack>
         </Flex>
