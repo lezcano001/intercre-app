@@ -5,7 +5,8 @@ const GENDERS_CATEGORIES = ["FEMALE", "MALE", "MIXED"] as const
 const GENDERS = ["FEMALE", "MALE"] as const
 const GENDERS_MAP = {
     "FEMALE": "Femenino",
-    "MALE": "Masculino"
+    "MALE": "Masculino",
+    "MIXED": "Mixto"
 }
 
 const DISCIPLINES_MAP = {
