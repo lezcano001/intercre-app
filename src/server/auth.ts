@@ -179,8 +179,6 @@ export const authOptions: NextAuthOptions = {
               return {
                 id: user.id,
                 participantCI: user.participantCI,
-                email: user.email,
-                image: user.image,
                 name: `${user.participant.firstname} ${user.participant.lastname}`,
                 institutionISO: user.participant.institutionISO
               }
