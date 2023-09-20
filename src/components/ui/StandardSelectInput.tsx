@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Select, type SelectProps } from "@chakra-ui/react";
+import { FormControl, FormErrorMessage, FormLabel, Select, type SelectProps } from "@chakra-ui/react";
 import { twMerge } from "tailwind-merge";
 
 interface StandardSelectInputProps extends SelectProps {
@@ -8,13 +8,15 @@ interface StandardSelectInputProps extends SelectProps {
         label: string;
         value: string | number;
     }[];
+    isError?: string;
 }
 
-export function StandardSelectInput({ className = "", options, label, ...rest }: StandardSelectInputProps) {
+export function StandardSelectInput({ className = "", options, label, isError, ...rest }: StandardSelectInputProps) {
     return (
         <FormControl
             className={twMerge(`
                 w-full`, className)}
+            isInvalid={Boolean(isError)}
         >
             {label ? (
                 <FormLabel>
@@ -36,6 +38,11 @@ export function StandardSelectInput({ className = "", options, label, ...rest }:
                     </option>
                 ))}
             </Select>
+            {isError ? (
+                <FormErrorMessage>
+                    {isError}
+                </FormErrorMessage>
+            ) : null}
         </FormControl>
     )
 }
