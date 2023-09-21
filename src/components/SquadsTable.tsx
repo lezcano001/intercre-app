@@ -70,7 +70,6 @@ export function SquadsTable() {
                                         <Button
                                             as={NextLink}
                                             href={"/modalidades/" + discipline.disciplineId + "/" + discipline.institutionISO}
-                                            colorScheme="yellow"
                                         >
                                             Editar
                                         </Button>
