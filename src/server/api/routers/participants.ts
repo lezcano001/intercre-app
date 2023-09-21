@@ -7,7 +7,8 @@ import {
 } from '~/server/api/trpc'
 import { CIUniqueConstraintViolationError, InternalServerError, ParticipantNotFound, UnauthorizedError } from '~/utils/serverErrors'
 import { TRPCError } from '@trpc/server'
-import { GENDERS, GENDERS_CATEGORIES, GENDERS_MAP, emptyStringToUndefined } from '~/utils/constants'
+import { GENDERS, GENDERS_CATEGORIES, GENDERS_MAP } from '~/utils/constants'
+import { capitalizeText, emptyStringToUndefined } from '~/utils/formatters'
 
 // The publicProcedure is temporary because i do not implemented yet an authentication system.
 
@@ -59,7 +60,7 @@ export const participantsRouter = createTRPCRouter({
         institution: z.number(),
         gender: z.enum(GENDERS),
     })).mutation(async ({ ctx, input }) => {
-        const { ci: CI, institution: institutionISO, ...rest } = input
+        const { ci: CI, institution: institutionISO, firstname, lastname, ...rest } = input
 
         const { institutionISO: userInstitutionISO } = ctx.session.user
 
@@ -74,6 +75,8 @@ export const participantsRouter = createTRPCRouter({
                     participantType: 'STUDENT',
                     CI,
                     institutionISO,
+                    firstname: capitalizeText(firstname),
+                    lastname: capitalizeText(lastname)
                 }
             })
 
@@ -201,7 +204,7 @@ export const participantsRouter = createTRPCRouter({
         institution: z.number(),
         gender: z.enum(GENDERS),
     })).mutation(async ({ ctx, input }) => {
-        const { currentCI: CI, ci: newCI, institution: institutionISO, ...rest } = input
+        const { currentCI: CI, ci: newCI, institution: institutionISO, firstname, lastname, ...rest } = input
 
         const { institutionISO: userInstitutionISO } = ctx.session.user
 
@@ -227,6 +230,8 @@ export const participantsRouter = createTRPCRouter({
                     ...rest,
                     CI: newCI,
                     institutionISO,
+                    firstname: capitalizeText(firstname),
+                    lastname: capitalizeText(lastname)
                 }
             })
 
