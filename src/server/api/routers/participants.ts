@@ -248,7 +248,8 @@ export const participantsRouter = createTRPCRouter({
         roleId: z.string(),
         aceptedGenderCategory: z.enum(GENDERS_CATEGORIES).optional(),
         restrictGenders: z.boolean().optional(),
-        allowedParticipantsType: z.enum(["STUDENT", "TEACHER"]).optional()
+        allowedParticipantsType: z.enum(["STUDENT", "TEACHER"]).optional(),
+        searchBy: z.enum(['firstname', 'lastname', 'CI']).optional()
     })).query(async ({ ctx, input }) => {
         const {
             searchText,
@@ -256,7 +257,8 @@ export const participantsRouter = createTRPCRouter({
             searchUsers = false,
             aceptedGenderCategory,
             restrictGenders = false,
-            allowedParticipantsType
+            allowedParticipantsType,
+            searchBy = 'CI'
         } = input
 
         const { institutionISO } = ctx.session.user
@@ -274,19 +276,19 @@ export const participantsRouter = createTRPCRouter({
                     {
                         OR: [
                             {
-                                CI: {
+                                CI: searchBy === 'CI' ? {
                                     contains: searchText
-                                }
+                                } : undefined
                             },
                             {
-                                firstname: {
+                                firstname: searchBy === 'firstname' ? {
                                     contains: searchText
-                                }
+                                } : undefined
                             },
                             {
-                                lastname: {
+                                lastname: searchBy === 'lastname' ? {
                                     contains: searchText
-                                }
+                                } : undefined
                             },
                         ]
                     },
@@ -314,7 +316,7 @@ export const participantsRouter = createTRPCRouter({
                 ]
             },
             orderBy: {
-                CI: 'asc'               
+                CI: 'asc'
             },
             take: 4
         })

@@ -68,8 +68,8 @@ export function SuscribeParticipantToSquadButton({
                                 as="form"
                             >
                                 <StandardInput
-                                    label="Nombre de participante:"
-                                    placeholder="Ingrese un nombre o Doc. de identidad"
+                                    label="Doc. Identidad:"
+                                    placeholder="Ingrese el Doc. de Identidad"
                                     value={searchInput}
                                     onChange={e => setSearchInput(e.target.value)}
                                     ref={inputRef}
