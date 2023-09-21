@@ -1,5 +1,6 @@
 import { Button, Flex, useToast } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { type FormEvent, useState } from "react";
 import { StandardInput } from "~/components/ui/StandardInput";
@@ -9,6 +10,7 @@ export default function LoginPage() {
 
     const [userCIInput, setUserCIInput] = useState("")
     const [userPasswordInput, setUserPasswordInput] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
 
     const toast = useToast()
 
@@ -17,6 +19,8 @@ export default function LoginPage() {
     async function handleLoginForm(e: FormEvent<HTMLDivElement>) {
         e.preventDefault()
         
+        setIsLoading(true)
+
         const res = await signIn("credentials", {
             ci: userCIInput,
             password: userPasswordInput,
@@ -33,6 +37,8 @@ export default function LoginPage() {
             })
         }
 
+        setIsLoading(false)
+
         if (res?.ok) {
             await router.push("/")
         }
@@ -44,10 +50,20 @@ export default function LoginPage() {
                 className="
                     w-full
                     h-screen
-                    bg-gray-300
+                    bg-white
+                    px-8
+                    sm:p-0
                     items-center
-                    justify-center"
+                    justify-center
+                    flex-col
+                    gap-14"
             >
+                <Image
+                    alt="Logotype"
+                    src="/logotype.png"
+                    width={360}
+                    height={210}
+                />
                 <Flex
                     as="form"
                     className="
@@ -56,7 +72,7 @@ export default function LoginPage() {
                         w-full
                         max-w-md
                         flex-col
-                        p-12
+                        sm:p-12
                         rounded-md"
                     onSubmit={(e) => {
                         void handleLoginForm(e)
@@ -74,8 +90,10 @@ export default function LoginPage() {
                         type="password"
                     />
                     <Button
-                        colorScheme="blue"
+                        colorScheme="orange"
                         type="submit"
+                        isLoading={isLoading}
+                        loadingText="Iniciando sesión"
                     >
                         Iniciar Sesión
                     </Button>
