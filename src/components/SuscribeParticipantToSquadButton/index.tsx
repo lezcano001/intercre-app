@@ -83,6 +83,7 @@ export function SuscribeParticipantToSquadButton({
                                 aceptedGenderCategory={aceptedGenderCategory}
                                 roleId={roleId}
                                 restrictGenders={restrictGenders}
+                                onAddUser={onClose}
                             />
                         </Flex>
                     </ModalBody>

@@ -5,12 +5,12 @@ import NextLink from 'next/link'
 import { api } from "~/utils/api";
 
 export function SquadsTable() {
-    const participations = api.participations.getAll.useQuery()
+    const disciplines = api.disciplines.getAll.useQuery()
 
-    if (participations?.data instanceof TRPCError) {
+    if (disciplines?.data instanceof TRPCError) {
         return (
             <Flex>
-                {participations.data.message}
+                {disciplines.data.message}
             </Flex>
         )
     }
@@ -22,7 +22,6 @@ export function SquadsTable() {
                     <Tr>
                         <Th>DEPORTE</Th>
                         <Th>CATEGORÍA</Th>
-                        <Th>INSC. POR</Th>
                         <Th
                             isNumeric
                         >
@@ -31,7 +30,7 @@ export function SquadsTable() {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {participations.isFetching ? (
+                    {disciplines.isFetching ? (
                         <Tr>
                             <Td
                                 colSpan={4}
@@ -50,29 +49,37 @@ export function SquadsTable() {
                             </Td>
                         </Tr>
                     ) : (
-                        participations?.data && participations.data.length > 0 ? participations.data.map(participation => (
+                        disciplines?.data && disciplines.data.length > 0 ? disciplines.data.map(discipline => (
                             <Tr
-                                key={participation.disciplineId + ' ' + participation.institutionISO}
+                                key={discipline.disciplineId}
                             >
                                 <Td>
-                                    {participation.discipline}
+                                    {discipline.name}
                                 </Td>
                                 <Td>
-                                    {participation.genreCategory}
-                                </Td>
-                                <Td>
-                                    {participation.registeredBy}
+                                    {discipline.genreCategory}
                                 </Td>
                                 <Td
                                     isNumeric
                                 >
-                                    <Button
-                                        as={NextLink}
-                                        href={"/modalidades/" + participation.disciplineId + "/" + participation.institutionISO}
-                                        colorScheme="green"
+                                    <Flex
+                                        className="
+                                            gap-2.5
+                                            justify-end"
                                     >
-                                        Imprimir
-                                    </Button>
+                                        <Button
+                                            colorScheme="green"
+                                        >
+                                            Imprimir
+                                        </Button>
+                                        <Button
+                                            as={NextLink}
+                                            href={"/modalidades/" + discipline.disciplineId + "/" + discipline.institutionISO}
+                                            colorScheme="yellow"
+                                        >
+                                            Editar
+                                        </Button>
+                                    </Flex>
                                 </Td>
                             </Tr>
                             )) : (

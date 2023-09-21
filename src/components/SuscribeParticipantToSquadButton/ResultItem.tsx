@@ -7,10 +7,11 @@ interface ResultItemProps {
     name: string;
     institutionISO: number;
     roleId: string;
-    disciplineId: string
+    disciplineId: string;
+    onAddUser: () => void;
 }
 
-export function ResultItem({ CI, name, disciplineId, institutionISO, roleId }: ResultItemProps) {
+export function ResultItem({ CI, name, disciplineId, institutionISO, roleId, onAddUser }: ResultItemProps) {
     const trpcUtils = api.useContext()
 
     const [isLoading, setIsLoading] = useState(false)
@@ -31,6 +32,7 @@ export function ResultItem({ CI, name, disciplineId, institutionISO, roleId }: R
             institutionISO,
             roleId
         })
+        onAddUser()
         setIsLoading(false)
     }
 

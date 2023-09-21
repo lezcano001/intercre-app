@@ -7,7 +7,7 @@ import { DeleteParticipantModal } from "./DeleteParticipantModal";
 
 // Add the sorting to the table headers
 export function StudentsTable() {
-    const participants = api.participants.getAll.useQuery()
+    const participants = api.participants.getAll.useQuery({})
 
     return (
         <TableContainer>

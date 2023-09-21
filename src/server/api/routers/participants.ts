@@ -13,19 +13,20 @@ import { GENDERS, GENDERS_CATEGORIES, GENDERS_MAP, emptyStringToUndefined } from
 
 // Add the try...catch blocks to catch the errors
 export const participantsRouter = createTRPCRouter({
-    getAll: protectedProcedure.query(async ({ ctx }) => {
-        const { participantCI, institutionISO } = ctx.session.user
+    getAll: protectedProcedure.input(z.object({
+        participantType: z.enum(["STUDENT", "TEACHER"]).optional()
+    })).query(async ({ ctx, input }) => {
+        const { institutionISO } = ctx.session.user
+        const { participantType = "STUDENT" } = input
 
         return ctx.prisma.participant.findMany({
             where: {
                 AND: [
                     {
-                        CI: {
-                            not: participantCI
-                        }
+                        institutionISO
                     },
                     {
-                        institutionISO
+                        participantType
                     }
                 ]
             }

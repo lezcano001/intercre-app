@@ -24,18 +24,17 @@ export const squadsRouter = createTRPCRouter({
         const discipline = await ctx.prisma.discipline.findUnique({
             where: {
                 disciplineId,
-                AND: {
-                    Participations: {
-                        some: {
-                            institutionISO
-                        }
-                    }
-                }
+
             },
             select: {
                 DisciplineRoles: {
                     include: {
                         SquadParticipants: {
+                            where: {
+                                Participant: {
+                                    institutionISO
+                                }
+                            },
                             select: {
                                 Participant: {
                                     select: {
@@ -120,13 +119,6 @@ export const squadsRouter = createTRPCRouter({
                         {
                             disciplineId
                         },
-                        {
-                            SquadParticipants: {
-                                every: {
-                                    participantCI
-                                }
-                            }
-                        }
                     ]
                 },
                 include: {
@@ -164,7 +156,6 @@ export const squadsRouter = createTRPCRouter({
                         data: {
                             disciplineId,
                             participantCI,
-                            institutionISO,
                             roleId
                         }
                     })
@@ -181,7 +172,6 @@ export const squadsRouter = createTRPCRouter({
                     data: {
                         disciplineId,
                         participantCI,
-                        institutionISO,
                         roleId
                     }
                 })
@@ -211,7 +201,7 @@ export const squadsRouter = createTRPCRouter({
             throw ParticipantNotFound()
         }
 
-        if (participant.institutionISO === userInstitutionISO) {
+        if (participant.institutionISO !== userInstitutionISO) {
             throw UnauthorizedError()
         }
 

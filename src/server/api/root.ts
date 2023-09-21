@@ -1,7 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { participantsRouter } from "./routers/participants";
 import { institutionsRouter } from "./routers/institutions";
-import { participationsRouter } from "./routers/participations";
 import { disciplinesRouter } from "./routers/disciplines";
 import { squadsRouter } from "./routers/squads";
 
@@ -13,7 +12,6 @@ import { squadsRouter } from "./routers/squads";
 export const appRouter = createTRPCRouter({
   participants: participantsRouter,
   institutions: institutionsRouter,
-  participations: participationsRouter,
   disciplines: disciplinesRouter,
   squads: squadsRouter
 });

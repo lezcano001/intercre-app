@@ -41,20 +41,18 @@ model Participant {
     User            User?
     gender          Gender
     SquadList       SquadParticipant[]
-    Participation   Participation[]
     participantType ParticipantsTypes
 
     @@index([institutionISO])
 }
 
 model Institution {
-    ISO            Int             @id
-    department     String
-    city           String
-    name           String
-    abbreviation   String
-    Participants   Participant[]
-    Participations Participation[]
+    ISO          Int           @id
+    department   String
+    city         String
+    name         String
+    abbreviation String
+    Participants Participant[]
 }
 
 // Available Genres categories
@@ -71,9 +69,8 @@ model SquadParticipant {
     Participant    Participant    @relation(fields: [participantCI], references: [CI], onDelete: Cascade)
     participantCI  String
     // Participation
-    Participation  Participation  @relation(fields: [disciplineId, institutionISO], references: [disciplineId, institutionISO], onDelete: Cascade)
+    Discipline     Discipline     @relation(fields: [disciplineId], references: [disciplineId], onDelete: Cascade)
     disciplineId   String
-    institutionISO Int
     // Discipline Role
     disciplineRole DisciplineRole @relation(fields: [roleId], references: [roleId], onDelete: Cascade)
     roleId         String
@@ -81,38 +78,16 @@ model SquadParticipant {
     @@id([participantCI, disciplineId, roleId])
     @@index([participantCI])
     @@index([roleId])
-    @@index([disciplineId, institutionISO])
-}
-
-// This register the participation of an institution into an discipline
-model Participation {
-    // Discipline
-    discipline     Discipline  @relation(fields: [disciplineId], references: [disciplineId], onDelete: Cascade)
-    disciplineId   String
-    // Institution
-    institution    Institution @relation(fields: [institutionISO], references: [ISO], onDelete: Cascade)
-    institutionISO Int
-    // Registered By
-    registeredBy   Participant @relation(fields: [participantCI], references: [CI], onDelete: Cascade)
-    participantCI  String
-
-    SquadParticipants SquadParticipant[]
-
-    inscriptionDate DateTime @default(now())
-
-    @@id([disciplineId, institutionISO])
     @@index([disciplineId])
-    @@index([institutionISO])
-    @@index([participantCI])
 }
 
 // This define a new discipline
 model Discipline {
-    disciplineId    String           @id @default(cuid())
+    disciplineId    String             @id @default(cuid())
     name            String
     DisciplineRoles DisciplineRole[]
-    Participations  Participation[]
     genreCategory   GenresCategories
+    Participants    SquadParticipant[]
 }
 
 enum AvailableRoles {

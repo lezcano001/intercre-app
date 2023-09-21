@@ -13,6 +13,7 @@ interface ResultsListProps {
     aceptedGenderCategory?: typeof GENDERS_CATEGORIES[number];
     restrictGenders: boolean;
     allowedParticipantsType: "STUDENT" | "TEACHER"; 
+    onAddUser: () => void;
 }
 
 export function ResultsList({
@@ -22,7 +23,8 @@ export function ResultsList({
     roleId,
     aceptedGenderCategory,
     restrictGenders,
-    allowedParticipantsType
+    allowedParticipantsType,
+    onAddUser
 }: ResultsListProps) {
     const debouncedSearchInput = useDebounce(searchInput, 400)
 
@@ -92,6 +94,7 @@ export function ResultsList({
                     disciplineId={disciplineId}
                     institutionISO={institutionISO}
                     roleId={roleId}
+                    onAddUser={onAddUser}
                 />
             )) : (
                 <Flex
