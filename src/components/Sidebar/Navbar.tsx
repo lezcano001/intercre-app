@@ -1,6 +1,6 @@
 import { VStack } from "@chakra-ui/react";
 import { NavItem } from "../ui/NavItem";
-import { RiBookLine, RiGroupLine } from "react-icons/ri";
+import { RiGroupLine, RiPresentationLine, RiRunLine } from "react-icons/ri";
 
 export function Navbar() {
     return (
@@ -12,16 +12,22 @@ export function Navbar() {
                 mt-10"
         >
             <NavItem
-                href="/participantes"
+                href="/alumnos"
                 icon={RiGroupLine}
             >
-                Participantes
+                Alumnos
             </NavItem>
             <NavItem
-                href="/inscripciones"
-                icon={RiBookLine}
+                href="/profesores"
+                icon={RiPresentationLine}
             >
-                Inscripciones
+                Profesores
+            </NavItem>
+            <NavItem
+                href="/modalidades"
+                icon={RiRunLine}
+            >
+                Modalidades
             </NavItem>
         </VStack>
     )
