@@ -220,6 +220,7 @@ export default function EditParticipant() {
                             onChange={e => setCIInput(e.target.value)}
                             label="Documento de Identidad:"
                             isError={zodErrors.ci}
+                            isRequired
                         />
                     </GridItem>
                     <GridItem>
@@ -228,6 +229,7 @@ export default function EditParticipant() {
                             value={nameInput}
                             onChange={e => setNameInput(e.target.value)}
                             isError={zodErrors.firstname}
+                            isRequired
                         />
                     </GridItem>
                     <GridItem>
@@ -236,6 +238,7 @@ export default function EditParticipant() {
                             value={lastNameInput}
                             onChange={e => setLastNameInput(e.target.value)}
                             isError={zodErrors.lastname}
+                            isRequired
                         />
                     </GridItem>
                     <GridItem>
@@ -250,6 +253,7 @@ export default function EditParticipant() {
                             value={genderInput}
                             onChange={e => setGenderInput(e.target.value as (typeof GENDERS)[number])}
                             isError={zodErrors.gender}
+                            isRequired
                         />
                     </GridItem>
                     <GridItem>
@@ -259,11 +263,12 @@ export default function EditParticipant() {
                             onChange={e => setBirthdateInput(e.target.value)}
                             type="date"
                             isError={zodErrors.birthDate}
+                            isRequired
                         />
                     </GridItem>
                     <GridItem>
                         <StandardSelectInput
-                            label="Institución"
+                            label="Institución:"
                             options={getAvailableInstitutions.data ?
                                 getAvailableInstitutions.data?.map((institution) => {
                                     return {
@@ -275,6 +280,7 @@ export default function EditParticipant() {
                             value={institutionInput}
                             onChange={e => setInstitutionInput(parseInt(e.target.value))}
                             isError={zodErrors.institution}
+                            isRequired
                         />
                     </GridItem>
                     <GridItem>

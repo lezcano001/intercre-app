@@ -11,12 +11,13 @@ interface StandardSelectInputProps extends SelectProps {
     isError?: string;
 }
 
-export function StandardSelectInput({ className = "", options, label, isError, ...rest }: StandardSelectInputProps) {
+export function StandardSelectInput({ className = "", options, label, isError, isRequired, ...rest }: StandardSelectInputProps) {
     return (
         <FormControl
             className={twMerge(`
                 w-full`, className)}
             isInvalid={Boolean(isError)}
+            isRequired={isRequired}
         >
             {label ? (
                 <FormLabel>

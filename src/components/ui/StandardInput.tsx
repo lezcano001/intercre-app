@@ -8,12 +8,13 @@ interface StandardInputProps extends InputProps {
     isError?: string;
 }
 
-const BaseStandardInput: ForwardRefRenderFunction<HTMLInputElement, StandardInputProps> = ({ label, containerClassName = "", isError, ...rest }, ref) => {
+const BaseStandardInput: ForwardRefRenderFunction<HTMLInputElement, StandardInputProps> = ({ label, containerClassName = "", isError, isRequired, ...rest }, ref) => {
     return (
         <FormControl
             className={twMerge(`
                 w-full`, containerClassName)}
             isInvalid={Boolean(isError)}
+            isRequired={isRequired}
         >
             {label ? (
                 <FormLabel>
