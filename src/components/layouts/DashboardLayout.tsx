@@ -1,9 +1,10 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useMediaQuery } from "@chakra-ui/react";
 import { type ReactNode } from "react"
 import { Sidebar } from "../Sidebar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Header } from "../Header";
+import { SidebarContextProvider } from "~/contexts/SidebarContext";
 
 interface DashboardLayoutProps {
     children: ReactNode;
@@ -15,6 +16,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     const { status } = useSession()
     const router = useRouter()
 
+    const [isLargerThan768] = useMediaQuery("(min-width: 768px)")
+
     if (status === "unauthenticated") {
 
         // eslint-disable-next-line
@@ -23,30 +26,33 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
     if (status === "authenticated") {
         return (
-            <Flex
-                className="
-                    w-full
-                    h-screen
-                    bg-gray-100"
-            >
-                <Sidebar />
+            <SidebarContextProvider>
                 <Flex
                     className="
-                        flex-col
-                        w-full"
+                        w-full
+                        h-screen
+                        bg-gray-100"
                 >
-                    <Header />
+                    <Sidebar />
                     <Flex
                         className="
                             flex-col
-                            w-full
-                            p-12
-                            overflow-y-scroll"
+                            w-full"
                     >
-                        {children}
+                        <Header />
+                        <Flex
+                            className={`
+                                flex-col
+                                w-full
+                                py-12
+                                ${isLargerThan768 ? 'px-12' : 'px-8'}
+                                overflow-y-scroll`}
+                        >
+                            {children}
+                        </Flex>
                     </Flex>
                 </Flex>
-            </Flex>
+            </SidebarContextProvider>
         )
     }
 

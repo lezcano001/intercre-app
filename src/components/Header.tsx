@@ -1,29 +1,45 @@
-import { Avatar, Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, useMediaQuery } from "@chakra-ui/react";
 import { useSession, signOut } from "next-auth/react";
-import { RiLogoutBoxRLine } from 'react-icons/ri'
+import { RiLogoutBoxRLine, RiMenuLine } from 'react-icons/ri'
+import { useSidebar } from "~/contexts/SidebarContext";
 
 export function Header() {
     const { data: session } = useSession()
 
+    const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
+
+    const { onOpen } = useSidebar()
+
     return (
         <Box
             as="header"
-            className="
+            className={`
                 w-full
                 max-h-[5rem]
                 h-full
-                px-12
+                ${isLargerThan768 ? 'px-12' : 'px-8'}
                 bg-white
                 border-b-[1px]
-                border-b-slate-200"
+                border-b-slate-200`}
         >
             <Flex
-                className="
+                className={`
                     h-full
                     w-full
                     items-center
-                    justify-end"
+                    ${isLargerThan768 ? 'justify-end' : 'justify-between'}`}
             >
+                {!isLargerThan768 ? (
+                    <Button
+                        onClick={onOpen}
+                    >
+                        <RiMenuLine
+                            className="
+                                w-6
+                                h-6"
+                        />
+                    </Button>
+                ) : null}
                 <Menu>
                     <MenuButton
                         as={Button}
@@ -36,15 +52,21 @@ export function Header() {
                                 font-normal
                                 flex
                                 items-center
-                                gap-5"
+                                gap-3
+                                md:gap-5
+                                text-sm
+                                md:text-base"
                         >
                             {session?.user.name}
-                            <Avatar />
+                            <Avatar
+                                size={isLargerThan768 ? "md" : "sm"}
+                            />
                         </Flex>
                     </MenuButton>
                     <MenuList
                         className="
-                            w-[20rem]
+                            w-[16rem]
+                            md:w-[20rem]
                             !text-gray-600"
                     >
                         <MenuItem
