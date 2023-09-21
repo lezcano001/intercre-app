@@ -34,7 +34,7 @@ export default function ParticipantCI() {
                     >
                         <IconButton
                             as={NextLink}
-                            href="/participantes"
+                            href="/alumnos"
                             icon={
                                 <RiArrowLeftLine
                                     className="
@@ -50,7 +50,7 @@ export default function ParticipantCI() {
                                 !text-2xl
                                 text-gray-600"
                         >
-                            Información del participante
+                            Información del Alumno
                         </Heading>
                     </Flex>
                     <Flex

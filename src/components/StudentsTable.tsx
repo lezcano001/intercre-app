@@ -6,7 +6,7 @@ import { DeleteParticipantModal } from "./DeleteParticipantModal";
 
 
 // Add the sorting to the table headers
-export function ParticipantsTable() {
+export function StudentsTable() {
     const participants = api.participants.getAll.useQuery()
 
     return (
@@ -38,7 +38,7 @@ export function ParticipantsTable() {
                                         gap-6
                                         text-gray-600"
                                 >
-                                    <Text>Cargando lista de participantes</Text>
+                                    <Text>Cargando lista de alumnos</Text>
                                     <Spinner />
                                 </Flex>
                             </Td>
@@ -58,13 +58,13 @@ export function ParticipantsTable() {
                                     >
                                         <Button
                                             as={NextLink}
-                                            href={`/participantes/${participant.CI}`}
+                                            href={`/alumnos/${participant.CI}`}
                                         >
                                             Ver
                                         </Button>
                                         <Button
                                             as={NextLink}
-                                            href={"/participantes/editar/" + participant.CI}
+                                            href={"/alumnos/editar/" + participant.CI}
                                         >
                                             Editar
                                         </Button>
@@ -87,7 +87,7 @@ export function ParticipantsTable() {
                                         justify-center
                                         text-gray-600"
                                 >
-                                    No hay participantes registrados
+                                    No hay alumnos registrados
                                 </Flex>
                             </Td>
                         </Tr>

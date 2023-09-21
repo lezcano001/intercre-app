@@ -68,7 +68,7 @@ export function SquadsTable() {
                                 >
                                     <Button
                                         as={NextLink}
-                                        href={"/inscripciones/" + participation.disciplineId + "/" + participation.institutionISO}
+                                        href={"/modalidades/" + participation.disciplineId + "/" + participation.institutionISO}
                                         colorScheme="green"
                                     >
                                         Imprimir

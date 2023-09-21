@@ -124,7 +124,7 @@ export default function CreateParticipant() {
                 >
                     <IconButton
                         as={NextLink}
-                        href="/participantes"
+                        href="/alumnos"
                         icon={
                             <RiArrowLeftLine
                                 className="
@@ -140,7 +140,7 @@ export default function CreateParticipant() {
                             !text-2xl
                             text-gray-600"
                     >
-                        Agregar participante
+                        Agregar Alumno
                     </Heading>
                 </Flex>
                 <Grid
@@ -241,7 +241,7 @@ export default function CreateParticipant() {
                     >
                         <Button
                             as={NextLink}
-                            href="/participantes"
+                            href="/alumnos"
                         >
                             Cancelar
                         </Button>

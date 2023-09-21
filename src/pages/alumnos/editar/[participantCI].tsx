@@ -181,7 +181,7 @@ export default function EditParticipant() {
                 >
                     <IconButton
                         as={NextLink}
-                        href="/participantes"
+                        href="/alumnos/"
                         icon={
                             <RiArrowLeftLine
                                 className="
@@ -197,7 +197,7 @@ export default function EditParticipant() {
                             !text-2xl
                             text-gray-600"
                     >
-                        Editar participante
+                        Editar Alumno
                     </Heading>
                 </Flex>
                 <Grid
@@ -298,7 +298,7 @@ export default function EditParticipant() {
                     >
                         <Button
                             as={NextLink}
-                            href="/participantes"
+                            href="/alumnos"
                         >
                             Cancelar
                         </Button>

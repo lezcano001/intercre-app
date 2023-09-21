@@ -57,7 +57,7 @@ export default function SquadList() {
                     <IconButton
                         colorScheme="yellow"
                         as={NextLink}
-                        href="/inscripciones"
+                        href="/modalidades"
                         aria-label="Volver"
                         icon={
                             <RiArrowLeftLine

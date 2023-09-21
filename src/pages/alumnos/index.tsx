@@ -1,5 +1,5 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
-import { ParticipantsTable } from "~/components/ParticipantsTable";
+import { StudentsTable } from "~/components/StudentsTable";
 import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
 import NextLink from 'next/link'
@@ -24,20 +24,20 @@ export default function Participants() {
                             !text-2xl
                             text-gray-600"
                     >
-                        Listado de participantes
+                        Listado de Alumnos
                     </Heading>
                     <Flex>
                         {/* Add the searchBar */}
                         <Button
                             as={NextLink}
-                            href="/participantes/crear"
+                            href="/alumnos/crear"
                             colorScheme="green"
                         >
-                            Agregar Participante
+                            Agregar Alumno
                         </Button>
                     </Flex>
                 </Flex>
-                <ParticipantsTable />
+                <StudentsTable />
                 {/* Pagination */}
             </Card>
         </DashboardLayout>
