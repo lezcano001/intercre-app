@@ -1,9 +1,8 @@
-import { Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, VStack, useMediaQuery } from "@chakra-ui/react";
-import { Logotype } from "./Logotype";
-import { NavItem } from "./ui/NavItem";
-import { RiBookLine, RiGroupLine } from 'react-icons/ri'
+import { Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, useMediaQuery } from "@chakra-ui/react";
+import { Logotype } from "../Logotype";
 import { useSidebar } from "~/contexts/SidebarContext";
 import { useEffect } from "react";
+import { Navbar } from "./Navbar";
 
 export function Sidebar() {
     const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
@@ -15,7 +14,7 @@ export function Sidebar() {
         
     // eslint-disable-next-line
     }, [isLargerThan768])
-    
+
     if (isLargerThan768) {
         return (
             <Flex
@@ -43,25 +42,7 @@ export function Sidebar() {
                             h-full"
                     />
                 </Flex>
-                <VStack
-                    spacing="4"
-                    className="
-                        mt-10
-                        w-full"
-                >
-                    <NavItem
-                        href="/participantes"
-                        icon={RiGroupLine}
-                    >
-                        Participantes
-                    </NavItem>
-                    <NavItem
-                        href="/inscripciones"
-                        icon={RiBookLine}
-                    >
-                        Inscripciones
-                    </NavItem>
-                </VStack>
+                <Navbar />
             </Flex>
         )
     }
@@ -106,25 +87,7 @@ export function Sidebar() {
                         bg-sky-800
                         !px-0"
                 >
-                    <VStack
-                        spacing="4"
-                        className="
-                            w-full
-                            mt-10"
-                    >
-                        <NavItem
-                            href="/participantes"
-                            icon={RiGroupLine}
-                        >
-                            Participantes
-                        </NavItem>
-                        <NavItem
-                            href="/inscripciones"
-                            icon={RiBookLine}
-                        >
-                            Inscripciones
-                        </NavItem>
-                    </VStack>
+                    <Navbar />
                 </DrawerBody>
             </DrawerContent>
         </Drawer>
