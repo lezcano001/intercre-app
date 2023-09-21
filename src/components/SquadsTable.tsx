@@ -68,16 +68,16 @@ export function SquadsTable() {
                                             justify-end"
                                     >
                                         <Button
-                                            colorScheme="green"
-                                        >
-                                            Imprimir
-                                        </Button>
-                                        <Button
                                             as={NextLink}
                                             href={"/modalidades/" + discipline.disciplineId + "/" + discipline.institutionISO}
                                             colorScheme="yellow"
                                         >
                                             Editar
+                                        </Button>
+                                        <Button
+                                            colorScheme="green"
+                                        >
+                                            Imprimir
                                         </Button>
                                     </Flex>
                                 </Td>
