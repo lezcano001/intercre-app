@@ -90,6 +90,8 @@ export default function EditParticipant() {
 
             resetFields({
                 ...participant.data,
+                email: participant.data.email ?? "",
+                telephone: participant.data.telephone ?? "",
                 gender: participant.data.gender.value as (typeof GENDERS)[number],
             })
         }
@@ -117,14 +119,14 @@ export default function EditParticipant() {
                 ci: CIInput,
                 firstname: nameInput,
                 lastname: lastNameInput,
-                telephone: telephoneInput,
-                email: emailInput,
+                telephone: telephoneInput ?? undefined,
+                email: emailInput ?? undefined,
                 birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
                 institution: institutionInput,
                 gender: genderInput,
             })
     
-            await router.push("/participantes")
+            await router.push("/alumnos")
         } catch (err) {
             if (err instanceof TRPCClientError) {
                 const errData = err.data as {
@@ -159,6 +161,8 @@ export default function EditParticipant() {
             if (participant.data) {
                 resetFields({
                     ...participant.data,
+                    email: participant.data.email ?? "",
+                    telephone: participant.data.telephone ?? "",
                     gender: participant.data.gender.value as (typeof GENDERS)[number],
                 })
             }

@@ -1,3 +1,5 @@
+import { z } from "zod"
+
 const DEFAULT_USER_IMAGE_URL = '/fallback-participant-profile-image.svg'
 
 const GENDERS_CATEGORIES = ["FEMALE", "MALE", "MIXED"] as const
@@ -24,10 +26,13 @@ const DISCIPLINES_MAP = {
     }
 }
 
+const emptyStringToUndefined = z.literal('').transform(() => undefined)
+
 export {
     DEFAULT_USER_IMAGE_URL,
     GENDERS,
     GENDERS_CATEGORIES,
     GENDERS_MAP,
-    DISCIPLINES_MAP
+    DISCIPLINES_MAP,
+    emptyStringToUndefined
 }

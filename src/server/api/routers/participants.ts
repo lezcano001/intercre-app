@@ -7,7 +7,7 @@ import {
 } from '~/server/api/trpc'
 import { CIUniqueConstraintViolationError, InternalServerError, ParticipantNotFound, UnauthorizedError } from '~/utils/serverErrors'
 import { TRPCError } from '@trpc/server'
-import { GENDERS, GENDERS_CATEGORIES, GENDERS_MAP } from '~/utils/constants'
+import { GENDERS, GENDERS_CATEGORIES, GENDERS_MAP, emptyStringToUndefined } from '~/utils/constants'
 
 // The publicProcedure is temporary because i do not implemented yet an authentication system.
 
@@ -43,14 +43,14 @@ export const participantsRouter = createTRPCRouter({
         lastname: z.string().min(1, {
             message: 'Este campo es requerido'
         }),
-        telephone: z.string().max(10, {
+        telephone: z.string().min(10, {
             message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
-        }).min(10, {
+        }).max(10, {
             message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
-        }),
+        }).optional().or(emptyStringToUndefined),
         email: z.string().email({
             message: 'Dirección de correo electrónico inválida'
-        }),
+        }).optional().or(emptyStringToUndefined),
         birthDate: z.date({
             required_error: 'Este campo es requirido',
             invalid_type_error: 'Debe ingresar una fecha válida'
@@ -189,10 +189,10 @@ export const participantsRouter = createTRPCRouter({
             message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
         }).min(10, {
             message: 'Ingrese un número de teléfono con 10 dígitos. Ej: 0984123456'
-        }),
+        }).optional().or(emptyStringToUndefined),
         email: z.string().email({
             message: 'Dirección de correo electrónico inválida'
-        }),
+        }).optional().or(emptyStringToUndefined),
         birthDate: z.date({
             required_error: 'Este campo es requirido',
             invalid_type_error: 'Debe ingresar una fecha válida'

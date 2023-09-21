@@ -59,13 +59,13 @@ export default function ParticipantCI() {
                     >
                         <Button
                             as={NextLink}
-                            href={"/participantes/editar/" + participant?.data?.CI}
+                            href={"/alumnos/editar/" + participant?.data?.CI}
                         >
                             Editar
                         </Button>
                         <DeleteParticipantModal
                             participantCI={query.participantCI as string ?? ""}
-                            onSuccessRedirectTo="/participantes"
+                            onSuccessRedirectTo="/alumnos"
                         />
                     </Flex>
                 </Flex>

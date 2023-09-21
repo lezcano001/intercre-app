@@ -66,14 +66,14 @@ export default function CreateParticipant() {
                 ci: CIInput,
                 firstname: nameInput,
                 lastname: lastNameInput,
-                telephone: telephoneInput,
-                email: emailInput,
+                telephone: telephoneInput ?? undefined,
+                email: emailInput ?? undefined,
                 birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
                 institution: institutionInput,
                 gender: genderInput,
             })
 
-            await router.push("/participantes")
+            await router.push("/alumnos")
         } catch (err) {
             if (err instanceof TRPCClientError) {
                 const errData = err.data as {

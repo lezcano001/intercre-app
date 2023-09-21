@@ -33,8 +33,8 @@ model Participant {
     CI              String             @id
     firstname       String
     lastname        String
-    telephone       String
-    email           String
+    telephone       String?
+    email           String?
     birthDate       DateTime
     institution     Institution        @relation(fields: [institutionISO], references: [ISO])
     institutionISO  Int
