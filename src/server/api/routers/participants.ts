@@ -1,5 +1,4 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
-import { utapi } from 'uploadthing/server'
 import { z } from 'zod'
 
 import {
@@ -52,19 +51,14 @@ export const participantsRouter = createTRPCRouter({
         email: z.string().email({
             message: 'Dirección de correo electrónico inválida'
         }),
-        image: z.object({
-            imageFileKey: z.string(),
-            imageURL: z.string().url(),
-        }).optional(),
         birthDate: z.date({
             required_error: 'Este campo es requirido',
             invalid_type_error: 'Debe ingresar una fecha válida'
         }),
         institution: z.number(),
         gender: z.enum(GENDERS),
-        isStudent: z.boolean().optional()
     })).mutation(async ({ ctx, input }) => {
-        const { ci: CI, institution: institutionISO, image, isStudent = false, ...rest } = input
+        const { ci: CI, institution: institutionISO, ...rest } = input
 
         const { institutionISO: userInstitutionISO } = ctx.session.user
 
@@ -76,15 +70,9 @@ export const participantsRouter = createTRPCRouter({
             const createdParticipant = await ctx.prisma.participant.create({
                 data: {
                     ...rest,
-                    participantType: isStudent ? 'STUDENT' : 'TEACHER',
+                    participantType: 'STUDENT',
                     CI,
                     institutionISO,
-                    image: image ? {
-                        create: {
-                            imageURL: image.imageURL,
-                            fileKey: image.imageFileKey
-                        }
-                    } : undefined,
                 }
             })
 
@@ -125,18 +113,7 @@ export const participantsRouter = createTRPCRouter({
                 where: {
                     CI
                 },
-                include: {
-                    image: {
-                        select: {
-                            fileKey: true
-                        }
-                    }
-                }
             })
-    
-            if (deletedParticipant.image?.fileKey) {
-                await utapi.deleteFiles([deletedParticipant.image.fileKey])
-            }
 
             return {
                 ci: deletedParticipant.CI,
@@ -178,12 +155,6 @@ export const participantsRouter = createTRPCRouter({
             },
             include: {
                 institution: true,
-                image: {
-                    select: {
-                        imageURL: true,
-                        fileKey: true
-                    }
-                },
             }
         })
 
@@ -222,20 +193,14 @@ export const participantsRouter = createTRPCRouter({
         email: z.string().email({
             message: 'Dirección de correo electrónico inválida'
         }),
-        image: z.object({
-            imageFileKey: z.string(),
-            imageURL: z.string().url()
-        }).optional(),
         birthDate: z.date({
             required_error: 'Este campo es requirido',
             invalid_type_error: 'Debe ingresar una fecha válida'
         }),
         institution: z.number(),
         gender: z.enum(GENDERS),
-        isStudent: z.boolean(),
-        previousImageFileKey: z.string().optional(),
     })).mutation(async ({ ctx, input }) => {
-        const { currentCI: CI, ci: newCI, institution: institutionISO, image, isStudent, previousImageFileKey, ...rest } = input
+        const { currentCI: CI, ci: newCI, institution: institutionISO, ...rest } = input
 
         const { institutionISO: userInstitutionISO } = ctx.session.user
 
@@ -252,11 +217,6 @@ export const participantsRouter = createTRPCRouter({
         // What i should do 
         try {
             // If the image was updated, then delete the previous imageFileKey
-            if (image && previousImageFileKey) {
-                await utapi.deleteFiles([
-                    previousImageFileKey
-                ])
-            }
 
             const updatedParticipant = await ctx.prisma.participant.update({
                 where: {
@@ -264,26 +224,8 @@ export const participantsRouter = createTRPCRouter({
                 },
                 data: {
                     ...rest,
-                    participantType: isStudent ? "STUDENT" : "TEACHER",
                     CI: newCI,
                     institutionISO,
-                    image: image
-                        ? previousImageFileKey
-                            ?  {
-                                    update: {
-                                        data: {
-                                            imageURL: image.imageURL,
-                                            fileKey: image.imageFileKey
-                                        }
-                                    }
-                                }
-                            :   {
-                                    create: {
-                                        imageURL: image.imageURL,
-                                        fileKey: image.imageFileKey,
-                                    }
-                                }
-                        : undefined
                 }
             })
 

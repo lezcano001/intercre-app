@@ -24,15 +24,6 @@ model User {
     @@index([participantCI])
 }
 
-model Image {
-    fileKey       String      @id
-    imageURL      String
-    participant   Participant @relation(fields: [participantCI], references: [CI], onDelete: Cascade)
-    participantCI String      @unique
-
-    @@index([participantCI])
-}
-
 enum Gender {
     MALE
     FEMALE
@@ -48,7 +39,6 @@ model Participant {
     institution     Institution        @relation(fields: [institutionISO], references: [ISO])
     institutionISO  Int
     User            User?
-    image           Image?
     gender          Gender
     SquadList       SquadParticipant[]
     Participation   Participation[]

@@ -8,9 +8,6 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { DeleteParticipantModal } from "~/components/DeleteParticipantModal";
 import { StandardInputViewer } from "~/components/ui/StandardInputViewer";
-import { StandardImageInputViewer } from "~/components/ui/StandardImageInputViewer";
-import { DEFAULT_USER_IMAGE_URL } from "~/utils/constants";
-import { StandardSwitchInputViewer } from "~/components/ui/StandardSwitchInputViewer";
 
 export default function ParticipantCI() {
     const { query } = useRouter()
@@ -27,7 +24,7 @@ export default function ParticipantCI() {
                     className="
                         items-center
                         w-full
-                        mb-12
+                        mb-16
                         justify-between"
                 >
                     <Flex
@@ -78,26 +75,6 @@ export default function ParticipantCI() {
                     templateColumns="repeat(2, 1fr)"
                     gap="9"
                 >
-                    <GridItem
-                        colSpan={2}
-                        className="
-                            flex
-                            items-center
-                            justify-center"
-                    >
-                        <StandardImageInputViewer
-                            alt={`Imagen de perfil de ${participant?.data?.firstname} ${participant?.data?.lastname}`}
-                            src={participant?.data?.image ? participant?.data?.image.imageURL : DEFAULT_USER_IMAGE_URL}
-                        />
-                    </GridItem>
-                    <GridItem
-                        colSpan={2}
-                    >
-                        <StandardSwitchInputViewer
-                            label="Es estudiante:"
-                            isChecked={participant?.data?.participantType === "STUDENT"}
-                        />
-                    </GridItem>
                     <GridItem>
                         <StandardInputViewer
                             label="Documento de Identidad:"

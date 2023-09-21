@@ -10,10 +10,7 @@ import { api } from "~/utils/api"
 import { Card } from "~/components/ui/Card"
 import { StandardSelectInput } from "~/components/ui/StandardSelectInput"
 import { TRPCClientError } from "@trpc/client"
-import { StandardImageInput } from "~/components/ui/StandardImageInput"
-import { useUploadThing } from "~/utils/uploadthing"
 import { GENDERS, GENDERS_MAP } from "~/utils/constants"
-import { StandardSwitchInput } from "~/components/ui/StandardSwitchInput"
 
 type EditParticipantFormFields = {
     CI: string,
@@ -26,7 +23,6 @@ type EditParticipantFormFields = {
     lastname: string,
     telephone: string,
     gender: (typeof GENDERS)[number],
-    isStudent: boolean;
 }
 
 type FieldsErrors = {
@@ -39,24 +35,10 @@ type FieldsErrors = {
     birthDate?: string;
     institution?: string;
     gender?: string;
-    isStudent?: string;
 }
 
 export default function EditParticipant() {
     const router = useRouter()
-
-    const { startUpload } = useUploadThing(
-        "imageUploader",
-        {
-            onUploadError: () => {
-                toast({
-                    title: "Ocurrió un error mientras se guardaba la imágen",
-                    colorScheme: "red",
-                    isClosable: true
-                })
-            },
-        }
-    )
 
     const { query } = router
 
@@ -69,8 +51,6 @@ export default function EditParticipant() {
     // The solution is pass another number, which is impossible to exists, or use an string as id.
     const participant = api.participants.getParticipant.useQuery(query.participantCI as string ?? "")
 
-    const [imageFile, setImageFile] = useState<File | null>(null)
-
     const [formIsSubmitting, setFormIsSubmitting] = useState(false)
     const [CIInput, setCIInput] = useState("")
     const [nameInput, setNameInput] = useState("")
@@ -80,7 +60,6 @@ export default function EditParticipant() {
     const [emailInput, setEmailInput] = useState("")
     const [telephoneInput, setTelephoneInput] = useState("")
     const [genderInput, setGenderInput] = useState<(typeof GENDERS)[number]>(GENDERS[0])
-    const [isStudent, setIsStudent] = useState(false)
 
     const [zodErrors, setZodErrors] = useState<FieldsErrors>({} as FieldsErrors)
 
@@ -93,7 +72,6 @@ export default function EditParticipant() {
         lastname,
         telephone,
         gender,
-        isStudent
     }: EditParticipantFormFields) {
             setCIInput(CI)
             setNameInput(firstname)
@@ -103,7 +81,6 @@ export default function EditParticipant() {
             setEmailInput(email)
             setTelephoneInput(telephone)
             setGenderInput(gender)
-            setIsStudent(isStudent)
     }
 
     // Reset file, when the data of of the participant changes
@@ -114,7 +91,6 @@ export default function EditParticipant() {
             resetFields({
                 ...participant.data,
                 gender: participant.data.gender.value as (typeof GENDERS)[number],
-                isStudent: participant.data.participantType === "STUDENT"
             })
         }
     }, [participant?.data])
@@ -136,22 +112,6 @@ export default function EditParticipant() {
         // mean extra innecesary request.
         setFormIsSubmitting(true)
         try {
-            let image = undefined;
-
-            // Also should delete the image from the database
-            if (imageFile) {
-                const data = await startUpload([imageFile])
-
-                if (data && data.length > 0) {
-                    if (data[0]?.url) {
-                        image = {
-                            imageURL: data[0].url,
-                            imageFileKey: data[0].key
-                        }
-                    }
-                }
-            }
-
             await updateParticipant.mutateAsync({
                 currentCI: query?.participantCI as string,
                 ci: CIInput,
@@ -161,10 +121,7 @@ export default function EditParticipant() {
                 email: emailInput,
                 birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
                 institution: institutionInput,
-                image,
                 gender: genderInput,
-                isStudent,
-                previousImageFileKey: participant.data.image?.fileKey
             })
     
             await router.push("/participantes")
@@ -177,7 +134,7 @@ export default function EditParticipant() {
                 }
 
                 if (errData.zodError) {
-                    const errorObject = Object.fromEntries(Object.entries(errData.zodError.fieldErrors).map(([key, value, ...rest]) => [key, value])) as FieldsErrors
+                    const errorObject = Object.fromEntries(Object.entries(errData.zodError.fieldErrors).map(([key, value]) => [key, value])) as FieldsErrors
 
                     setZodErrors({
                         ...errorObject
@@ -203,7 +160,6 @@ export default function EditParticipant() {
                 resetFields({
                     ...participant.data,
                     gender: participant.data.gender.value as (typeof GENDERS)[number],
-                    isStudent: participant.data.participantType === "STUDENT"
                 })
             }
         }
@@ -254,36 +210,6 @@ export default function EditParticipant() {
                         void handleUpdateParticipant(e)
                     }}
                 >
-                    <GridItem
-                        colSpan={2}
-                        className="
-                            flex
-                            items-center
-                            justify-center"
-                    >
-                        <StandardImageInput
-                            imageFile={imageFile}
-                            imageURL={participant?.data?.image?.imageURL}
-                            alt={`Foto de perfíl de ${nameInput} ${lastNameInput}`}
-                            onChange={(e) => {
-                                if (e.target.files?.[0]) {
-                                    setImageFile(e.target.files[0])
-                                }
-                            }}
-                        />
-                    </GridItem>
-                    <GridItem
-                        colSpan={2}
-                    >
-                        <StandardSwitchInput
-                            label="Es estudiante:"
-                            id="isStudent"
-                            isChecked={isStudent}
-                            onChange={e => {
-                                setIsStudent(e.target.checked)
-                            }}
-                        />
-                    </GridItem>
                     <GridItem>
                         <StandardInput
                             value={CIInput}

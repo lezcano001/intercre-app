@@ -8,12 +8,9 @@ import { type FormEvent, useState, useEffect } from "react";
 import { api } from '~/utils/api'
 import { useRouter } from "next/router";
 import { StandardInput } from "~/components/ui/StandardInput";
-import { StandardImageInput } from "~/components/ui/StandardImageInput";
 import { StandardSelectInput } from "~/components/ui/StandardSelectInput";
 import { TRPCClientError } from "@trpc/client";
-import { useUploadThing } from "~/utils/uploadthing";
 import { GENDERS, GENDERS_MAP } from "~/utils/constants";
-import { StandardSwitchInput } from "~/components/ui/StandardSwitchInput";
 
 type FieldsErrors = {
     ci?: string;
@@ -33,8 +30,6 @@ export default function CreateParticipant() {
 
     const getAvailableInstitutions = api.institutions.getAvailableInstitutions.useQuery()
     
-    const [imageFile, setImageFile] = useState<File | null>(null)
-
     const [formIsSubmitting, setFormIsSubmitting] = useState(false)
     const [CIInput, setCIInput] = useState("")
     const [nameInput, setNameInput] = useState("")
@@ -44,7 +39,6 @@ export default function CreateParticipant() {
     const [emailInput, setEmailInput] = useState("")
     const [telephoneInput, setTelephoneInput] = useState("")
     const [genderInput, setGenderInput] = useState<(typeof GENDERS)[number]>(GENDERS[0])
-    const [isStudent, setIsStudent] = useState(false)
 
     const [zodErrors, setZodErrors] = useState<FieldsErrors>({})
 
@@ -61,19 +55,6 @@ export default function CreateParticipant() {
 
     const router = useRouter()
 
-    const { startUpload } = useUploadThing(
-        "imageUploader",
-        {
-            onUploadError: () => {
-                toast({
-                    title: "Ocurrió un error mientras se guardaba la imágen",
-                    colorScheme: "red",
-                    isClosable: true
-                })
-            },
-        }
-    )
-
     async function handleCreateParticipant(e: FormEvent<HTMLDivElement>) {
         e.preventDefault()
 
@@ -81,33 +62,15 @@ export default function CreateParticipant() {
 
         setFormIsSubmitting(true)
         try {
-            let image = undefined;
-
-            // Also should delete the image from the database
-            if (imageFile) {
-                const data = await startUpload([imageFile])
-
-                if (data && data.length > 0) {
-                    if (data[0]?.url) {
-                        image = {
-                            imageURL: data[0].url,
-                            imageFileKey: data[0].key
-                        }
-                    }
-                }
-            }
-            
             await createParticipant.mutateAsync({
                 ci: CIInput,
                 firstname: nameInput,
                 lastname: lastNameInput,
                 telephone: telephoneInput,
                 email: emailInput,
-                image,
                 birthDate: new Date(parseInt(yyyy!), parseInt(mm!), parseInt(dd!)),
                 institution: institutionInput,
                 gender: genderInput,
-                isStudent
             })
 
             await router.push("/participantes")
@@ -120,7 +83,7 @@ export default function CreateParticipant() {
                 }
 
                 if (errData.zodError) {
-                    const errorObject = Object.fromEntries(Object.entries(errData.zodError.fieldErrors).map(([key, value, ...rest]) => [key, value])) as FieldsErrors
+                    const errorObject = Object.fromEntries(Object.entries(errData.zodError.fieldErrors).map(([key, value]) => [key, value])) as FieldsErrors
 
                     setZodErrors({
                         ...errorObject
@@ -157,7 +120,7 @@ export default function CreateParticipant() {
                         items-center
                         gap-9
                         w-full
-                        mb-12"
+                        mb-16"
                 >
                     <IconButton
                         as={NextLink}
@@ -190,35 +153,6 @@ export default function CreateParticipant() {
                         void handleCreateParticipant(e)
                     }}
                 >
-                    <GridItem
-                        colSpan={2}
-                        className="
-                            flex
-                            items-center
-                            justify-center"
-                    >
-                        <StandardImageInput
-                            imageFile={imageFile}
-                            alt={`Foto de perfíl de ${nameInput} ${lastNameInput}`}
-                            onChange={(e) => {
-                                if (e.target.files?.[0]) {
-                                    setImageFile(e.target.files[0])
-                                }
-                            }}
-                        />
-                    </GridItem>
-                    <GridItem
-                        colSpan={2}
-                    >
-                        <StandardSwitchInput
-                            label="Es estudiante:"
-                            id="isStudent"
-                            isChecked={isStudent}
-                            onChange={e => {
-                                setIsStudent(e.target.checked)
-                            }}
-                        />
-                    </GridItem>
                     <GridItem>
                         <StandardInput
                             value={CIInput}
