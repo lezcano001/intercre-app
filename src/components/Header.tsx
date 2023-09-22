@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, useMediaQuery } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text, useMediaQuery } from "@chakra-ui/react";
 import { useSession, signOut } from "next-auth/react";
 import { RiLogoutBoxRLine, RiMenuLine } from 'react-icons/ri'
 import { useSidebar } from "~/contexts/SidebarContext";
@@ -55,9 +55,26 @@ export function Header() {
                                 gap-3
                                 md:gap-5
                                 text-sm
-                                md:text-base"
+                                md:text-base
+                                border-l-[1px]
+                                border-l-gray-300
+                                pl-8"
                         >
-                            {session?.user.name}
+                            <Flex
+                                className="
+                                    flex-col
+                                    items-start"
+                            >
+                                <Text
+                                    className="
+                                        font-semibold"
+                                >
+                                    {session?.user.name}
+                                </Text>
+                                <Text>
+                                    {session?.user.institutionAbbreviation}
+                                </Text>
+                            </Flex>
                             <Avatar
                                 size={isLargerThan768 ? "md" : "sm"}
                             />

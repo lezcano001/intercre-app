@@ -2,7 +2,7 @@ import { encode, decode } from 'next-auth/jwt'
 import { env } from '~/env.mjs'
 import { type User } from '@prisma/client'
 
-export type AuthUser = Omit<User, "image" | "password" | "emailVerified" | "email" | "name"> & {institutionISO: number};
+export type AuthUser = Omit<User, "image" | "password" | "emailVerified" | "email" | "name"> & {institutionISO: number, institutionAbbreviation: string};
 
 export const tokenOneDay = 24 * 60 * 60
 export const tokenOneWeek = tokenOneDay * 7

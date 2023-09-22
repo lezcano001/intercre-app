@@ -25,6 +25,7 @@ declare module "next-auth" {
       id: string;
       participantCI: string;
       institutionISO: number;
+      institutionAbbreviation: string;
       // ...other properties
       // role: UserRole;
     };
@@ -35,6 +36,7 @@ declare module "next-auth" {
     id: string;
     participantCI: string;
     institutionISO: number;
+    institutionAbbreviation: string;
     // ...other properties
     // role: UserRole;
   }
@@ -64,7 +66,8 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.user!.id,
           participantCI: token.user!.participantCI,
-          institutionISO: token.user!.institutionISO
+          institutionISO: token.user!.institutionISO,
+          institutionAbbreviation: token.user!.institutionAbbreviation
         }
       }
 
@@ -77,7 +80,7 @@ export const authOptions: NextAuthOptions = {
     // seems to be no refreshed at all.
     async jwt({ token, user }) {
       if (user) {
-        const authUser = { participantCI: user.participantCI, id: user.id, institutionISO: user.institutionISO};
+        const authUser = { participantCI: user.participantCI, id: user.id, institutionISO: user.institutionISO, institutionAbbreviation: user.institutionAbbreviation};
 
         const accessToken = await jwtHelper.createAccessToken(authUser)
         const refreshToken = await jwtHelper.createRefreshToken(authUser)
@@ -180,7 +183,8 @@ export const authOptions: NextAuthOptions = {
                 id: user.id,
                 participantCI: user.participantCI,
                 name: `${user.participant.firstname} ${user.participant.lastname}`,
-                institutionISO: user.participant.institutionISO
+                institutionISO: user.participant.institutionISO,
+                institutionAbbreviation: user.participant.institution.abbreviation
               }
             }
           }
