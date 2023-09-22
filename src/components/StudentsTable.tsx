@@ -3,6 +3,7 @@ import { api } from '~/utils/api'
 
 import NextLink from 'next/link'
 import { DeleteParticipantModal } from "./DeleteParticipantModal";
+import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
 
 
 // Add the sorting to the table headers
@@ -68,6 +69,13 @@ export function StudentsTable() {
                                         >
                                             Editar
                                         </Button>
+                                        <GenerateParticipantCredentialPDFModal
+                                            CI={participant.CI}
+                                            institution={participant.institution.abbreviation}
+                                            name={participant.firstname + ' ' + participant.lastname}
+                                            participantType="STUDENT"
+                                            age={participant.participantAge}
+                                        />
                                         <DeleteParticipantModal
                                             participantCI={String(participant.CI)}
                                         />

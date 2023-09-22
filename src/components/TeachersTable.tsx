@@ -1,5 +1,6 @@
-import { Button, Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { api } from "~/utils/api";
+import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
 
 export function TeachersTable() {
     const participants = api.participants.getAll.useQuery({
@@ -53,11 +54,13 @@ export function TeachersTable() {
                                             gap-2.5
                                             justify-end"
                                     >
-                                        <Button
-                                            colorScheme="orange"
-                                        >
-                                            Imprimir Acreditación
-                                        </Button>
+                                        <GenerateParticipantCredentialPDFModal
+                                            CI={participant.CI}
+                                            institution={participant.institution.abbreviation}
+                                            name={participant.firstname + ' ' + participant.lastname}
+                                            participantType="TEACHER"
+                                            gender={participant.gender}
+                                        />
                                     </Flex>
                                 </Td>
                             </Tr>

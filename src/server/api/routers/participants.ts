@@ -8,7 +8,7 @@ import {
 import { CIUniqueConstraintViolationError, InternalServerError, ParticipantNotFound, UnauthorizedError } from '~/utils/serverErrors'
 import { TRPCError } from '@trpc/server'
 import { GENDERS, GENDERS_CATEGORIES, GENDERS_MAP } from '~/utils/constants'
-import { capitalizeText, emptyStringToUndefined } from '~/utils/formatters'
+import { calculateAge, capitalizeText, emptyStringToUndefined } from '~/utils/formatters'
 
 // The publicProcedure is temporary because i do not implemented yet an authentication system.
 
@@ -20,7 +20,7 @@ export const participantsRouter = createTRPCRouter({
         const { institutionISO } = ctx.session.user
         const { participantType = "STUDENT" } = input
 
-        return ctx.prisma.participant.findMany({
+        const participants = await ctx.prisma.participant.findMany({
             where: {
                 AND: [
                     {
@@ -30,6 +30,21 @@ export const participantsRouter = createTRPCRouter({
                         participantType
                     }
                 ]
+            },
+            include: {
+                institution: {
+                    select: {
+                        ISO: true,
+                        abbreviation: true
+                    }
+                }
+            }
+        })
+
+        return participants.map(participant => {
+            return {
+                ...participant,
+                participantAge: calculateAge(participant.birthDate)
             }
         });
     }),
