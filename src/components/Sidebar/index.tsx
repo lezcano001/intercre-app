@@ -3,6 +3,7 @@ import { Logotype } from "../Logotype";
 import { useSidebar } from "~/contexts/SidebarContext";
 import { useEffect } from "react";
 import { Navbar } from "./Navbar";
+import { CRECELogotype } from "../CRECELogotype";
 
 export function Sidebar() {
     const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
@@ -28,15 +29,20 @@ export function Sidebar() {
                 <Flex
                     className="
                         w-full
-                        justify-center
+                        justify-between
                         bg-white
                         h-20
                         py-2
+                        px-6
                         border-b-[1px]
                         border-b-slate-200
                         border-r-[1px]
                         border-r-slate-200"
                 >
+                    <CRECELogotype
+                        className="
+                            h-full"
+                    />
                     <Logotype
                         className="
                             h-full"
@@ -58,10 +64,9 @@ export function Sidebar() {
                 <DrawerHeader
                     className="
                         flex
-                        justify-center
                         bg-white
-                        !px-14
-                        !py-0"
+                        !py-0
+                        !px-0"
                 >
                     <DrawerCloseButton
                         className="
@@ -70,12 +75,17 @@ export function Sidebar() {
                     <Flex
                         className="
                         w-full
-                        justify-center
+                        justify-between
                         h-20
                         py-2
+                        px-6
                         border-b-[1px]
                         border-b-slate-200"
                     >
+                        <CRECELogotype
+                            className="
+                                h-full"
+                        />
                         <Logotype
                             className="
                                 h-full"
