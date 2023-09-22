@@ -1,7 +1,6 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
-import NextLink from 'next/link';
 import { TeachersTable } from "~/components/TeachersTable";
 
 export default function Teachers() {

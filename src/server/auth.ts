@@ -148,7 +148,7 @@ export const authOptions: NextAuthOptions = {
       // name: 'Credentials',
       credentials: {
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const {
           ci,
           password
