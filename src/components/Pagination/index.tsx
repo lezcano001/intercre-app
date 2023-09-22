@@ -44,7 +44,10 @@ export function Pagination({
                 justify-between
                 items-center"
         >
-            <Box>
+            <Box
+                className="
+                    text-gray-500"
+            >
                 <strong>{firstRegister}</strong> - <strong>{lastRegister}</strong> de <strong>{totalCountOfRegisters}</strong>
             </Box>
             <Stack
