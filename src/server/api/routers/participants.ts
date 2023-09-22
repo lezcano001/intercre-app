@@ -15,38 +15,78 @@ import { calculateAge, capitalizeText, emptyStringToUndefined } from '~/utils/fo
 // Add the try...catch blocks to catch the errors
 export const participantsRouter = createTRPCRouter({
     getAll: protectedProcedure.input(z.object({
-        participantType: z.enum(["STUDENT", "TEACHER"]).optional()
+        participantType: z.enum(["STUDENT", "TEACHER"]).optional(),
+        filterByCI: z.string().optional(),
+        perPage: z.number().optional(),
+        page: z.number().optional()
     })).query(async ({ ctx, input }) => {
         const { institutionISO } = ctx.session.user
-        const { participantType = "STUDENT" } = input
+        const { participantType = "STUDENT", filterByCI, perPage = 10, page = 1 } = input
 
-        const participants = await ctx.prisma.participant.findMany({
-            where: {
-                AND: [
-                    {
-                        institutionISO
+        const [participants, count] = await ctx.prisma.$transaction([
+            ctx.prisma.participant.findMany({
+                take: perPage,
+                skip: perPage * (page - 1),
+                orderBy: {
+                    firstname: 'asc'
+                },
+                where: {
+                    AND: [
+                        {
+                            institutionISO
+                        },
+                        {
+                            participantType
+                        },
+                        {
+                            CI: {
+                                contains: filterByCI
+                            }
+                        }
+                    ]
+                },
+                include: {
+                    institution: {
+                        select: {
+                            ISO: true,
+                            abbreviation: true
+                        }
                     },
-                    {
-                        participantType
-                    }
-                ]
-            },
-            include: {
-                institution: {
-                    select: {
-                        ISO: true,
-                        abbreviation: true
-                    }
-                }
-            }
-        })
+                },
+            }),
+            ctx.prisma.participant.count({
+                where: {
+                    AND: [
+                        {
+                            institutionISO
+                        },
+                        {
+                            participantType
+                        },
+                        {
+                            CI: {
+                                contains: filterByCI
+                            }
+                        }
+                    ]
+                },
+            }),
+        ])
 
-        return participants.map(participant => {
-            return {
-                ...participant,
-                participantAge: calculateAge(participant.birthDate)
+        return {
+            pagination: {
+                total: count,
+                page
+            },
+            data: {
+                participants: participants.map(participant => {
+                    return {
+                        ...participant,
+                        participantAge: calculateAge(participant.birthDate)
+                    }
+                })
             }
-        });
+        };
     }),
     createParticipant: protectedProcedure.input(z.object({
         ci: z.string().min(1, {
@@ -269,7 +309,9 @@ export const participantsRouter = createTRPCRouter({
         aceptedGenderCategory: z.enum(GENDERS_CATEGORIES).optional(),
         restrictGenders: z.boolean().optional(),
         allowedParticipantsType: z.enum(["STUDENT", "TEACHER"]).optional(),
-        searchBy: z.enum(['firstname', 'lastname', 'CI']).optional()
+        searchBy: z.enum(['firstname', 'lastname', 'CI']).optional(),
+        extendedResults: z.boolean().optional(),
+        take: z.number().optional()
     })).query(async ({ ctx, input }) => {
         const {
             searchText,
@@ -278,7 +320,9 @@ export const participantsRouter = createTRPCRouter({
             aceptedGenderCategory,
             restrictGenders = false,
             allowedParticipantsType,
-            searchBy = 'CI'
+            searchBy = 'CI',
+            extendedResults = false,
+            take = 4
         } = input
 
         const { institutionISO } = ctx.session.user
@@ -335,10 +379,18 @@ export const participantsRouter = createTRPCRouter({
                     }
                 ]
             },
+            include: extendedResults ? {
+                institution: {
+                    select: {
+                        ISO: true,
+                        abbreviation: true
+                    }
+                }
+            } : undefined,
             orderBy: {
                 CI: 'asc'
             },
-            take: 4
+            take
         })
 
         return searchResults

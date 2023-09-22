@@ -1,15 +1,26 @@
 import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, Button, Spinner, Text } from "@chakra-ui/react";
-import { api } from '~/utils/api'
 
 import NextLink from 'next/link'
 import { DeleteParticipantModal } from "./DeleteParticipantModal";
 import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
 
+type Participant = {
+    participantAge: number;
+    institution: {
+        ISO: number;
+        abbreviation: string;
+    };
+    CI: string;
+    firstname: string;
+    lastname: string;
+}
 
+interface StudentsTableProps {
+    participants?: Participant[];
+    isLoading: boolean;
+}
 // Add the sorting to the table headers
-export function StudentsTable() {
-    const participants = api.participants.getAll.useQuery({})
-
+export function StudentsTable({ participants, isLoading }: StudentsTableProps) {
     return (
         <TableContainer>
             <Table variant='simple'>
@@ -26,14 +37,14 @@ export function StudentsTable() {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {participants.isFetching ? (
+                    {isLoading ? (
                         <Tr>
                             <Td
                                 colSpan={3}
                             >
                                 <Flex
                                     className="
-                                        py-12
+                                        py-20
                                         w-full
                                         justify-center
                                         gap-6
@@ -45,7 +56,7 @@ export function StudentsTable() {
                             </Td>
                         </Tr>
                     ) : (
-                        participants?.data && participants.data.length > 0 ? (participants.data.map(participant => (
+                        participants && participants.length > 0 ? (participants.map(participant => (
                             <Tr
                                 key={participant.CI}
                             >

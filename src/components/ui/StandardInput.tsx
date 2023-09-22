@@ -6,26 +6,29 @@ interface StandardInputProps extends InputProps {
     label?: string;
     containerClassName?: HTMLDivElement["className"];
     isError?: string;
+    labelClassName?: HTMLLabelElement["className"];
+    className?: HTMLInputElement["className"]
 }
 
-const BaseStandardInput: ForwardRefRenderFunction<HTMLInputElement, StandardInputProps> = ({ label, containerClassName = "", isError, isRequired, ...rest }, ref) => {
+const BaseStandardInput: ForwardRefRenderFunction<HTMLInputElement, StandardInputProps> = ({ label, containerClassName = "", isError, isRequired, labelClassName = "", className = "", ...rest }, ref) => {
     return (
         <FormControl
-            className={twMerge(`
-                w-full`, containerClassName)}
+            className={twMerge(`!w-full`, containerClassName)}
             isInvalid={Boolean(isError)}
             isRequired={isRequired}
         >
             {label ? (
-                <FormLabel>
+                <FormLabel
+                    className={labelClassName}
+                >
                     {label}
                 </FormLabel>
             ) : null}
             <Input
                 ref={ref}
                 variant="filled"
-                className="
-                !bg-gray-200"
+                className={twMerge(`
+                    !bg-gray-200`, className)}
                 {...rest}
             />
             {isError ? (

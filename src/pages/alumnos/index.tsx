@@ -3,8 +3,26 @@ import { StudentsTable } from "~/components/StudentsTable";
 import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
 import NextLink from 'next/link'
+import { SearchStudent } from "~/components/SearchStudent";
+import { useState } from "react";
+import { Pagination } from "~/components/Pagination";
+import { STUDENTS_PER_PAGE } from "~/utils/constants";
+import { useDebounce } from "@uidotdev/usehooks";
+import { api } from "~/utils/api";
 
 export default function Participants() {
+    const [searchInput, setSearchInput] = useState("")
+
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const debouncedSearchInput = useDebounce(searchInput, 400)
+
+    const participants = api.participants.getAll.useQuery({
+        filterByCI: debouncedSearchInput ?? undefined,
+        page: currentPage,
+        perPage: STUDENTS_PER_PAGE
+    })
+
     return (
         <DashboardLayout>
             <Card
@@ -16,18 +34,28 @@ export default function Participants() {
                         items-center
                         justify-between
                         w-full
-                        mb-12"
+                        mb-12
+                        gap-20"
                 >
                     <Heading
                         as="h1"
                         className="
                             !text-2xl
-                            text-gray-600"
+                            text-gray-600
+                            whitespace-nowrap"
                     >
                         Listado de Alumnos
                     </Heading>
-                    <Flex>
-                        {/* Add the searchBar */}
+                    <Flex
+                        className="
+                            gap-5
+                            w-full
+                            justify-end"
+                    >
+                        <SearchStudent
+                            searchText={searchInput}
+                            onChange={(e) => {setSearchInput(e.target.value)}}
+                        />
                         <Button
                             as={NextLink}
                             href="/alumnos/crear"
@@ -37,8 +65,16 @@ export default function Participants() {
                         </Button>
                     </Flex>
                 </Flex>
-                <StudentsTable />
-                {/* Pagination */}
+                <StudentsTable
+                    participants={participants.data?.data.participants}
+                    isLoading={participants.isFetching}
+                />
+                <Pagination
+                    onPageChange={setCurrentPage}
+                    currentPage={currentPage}
+                    totalCountOfRegisters={participants.data?.pagination.total ?? STUDENTS_PER_PAGE}
+                    registersPerPage={STUDENTS_PER_PAGE}
+                />
             </Card>
         </DashboardLayout>
     )
