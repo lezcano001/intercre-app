@@ -1,6 +1,6 @@
 import { VStack } from "@chakra-ui/react";
 import { NavItem } from "../ui/NavItem";
-import { RiGroupLine, RiPresentationLine, RiRunLine } from "react-icons/ri";
+import { RiGroupLine, RiPresentationLine, RiQuestionLine, RiRunLine } from "react-icons/ri";
 
 export function Navbar() {
     return (
@@ -28,6 +28,12 @@ export function Navbar() {
                 icon={RiRunLine}
             >
                 Modalidades
+            </NavItem>
+            <NavItem
+                href="/ayuda"
+                icon={RiQuestionLine}
+            >
+                Ayuda
             </NavItem>
         </VStack>
     )
