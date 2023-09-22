@@ -23,10 +23,41 @@ export const participantsRouter = createTRPCRouter({
         const { institutionISO } = ctx.session.user
         const { participantType = "STUDENT", filterByCI, perPage = 10, page = 1 } = input
 
-        const [participants, count] = await ctx.prisma.$transaction([
-            ctx.prisma.participant.findMany({
+        const [participants, count, currentPage] = await ctx.prisma.$transaction(async (tx) => {
+            const totalCount = await tx.participant.count({
+                where: {
+                    AND: [
+                        {
+                            institutionISO
+                        },
+                        {
+                            participantType
+                        },
+                        {
+                            CI: {
+                                contains: filterByCI
+                            }
+                        }
+                    ]
+                },
+            })
+
+            const totalPages = Math.ceil(totalCount / perPage)
+
+            console.log({
+                totalPages,
+                totalCount
+            })
+
+            let currentPage = page
+
+            if (currentPage < 1 || currentPage > totalPages) {
+                currentPage = 1
+            }
+
+            const participants = await tx.participant.findMany({
                 take: perPage,
-                skip: perPage * (page - 1),
+                skip: perPage * (currentPage - 1),
                 orderBy: {
                     firstname: 'asc'
                 },
@@ -53,30 +84,15 @@ export const participantsRouter = createTRPCRouter({
                         }
                     },
                 },
-            }),
-            ctx.prisma.participant.count({
-                where: {
-                    AND: [
-                        {
-                            institutionISO
-                        },
-                        {
-                            participantType
-                        },
-                        {
-                            CI: {
-                                contains: filterByCI
-                            }
-                        }
-                    ]
-                },
-            }),
-        ])
+            })
+
+            return [participants, totalCount, currentPage]
+        })
 
         return {
             pagination: {
                 total: count,
-                page
+                page: currentPage,
             },
             data: {
                 participants: participants.map(participant => {

@@ -2,7 +2,7 @@ import { Flex, Heading } from "@chakra-ui/react";
 import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
 import { TeachersTable } from "~/components/TeachersTable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { api } from "~/utils/api";
 import { TEACHERS_PER_PAGE } from "~/utils/constants";
@@ -22,6 +22,12 @@ export default function Teachers() {
         perPage: TEACHERS_PER_PAGE,
         participantType: 'TEACHER'
     })
+
+    useEffect(() => {
+        if (participants.data?.pagination.page) {
+            setCurrentPage(participants.data.pagination.page)
+        }
+    }, [participants.data?.pagination.page])
 
     return (
         <DashboardLayout>

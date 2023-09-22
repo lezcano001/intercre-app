@@ -1,6 +1,5 @@
 import { Box, Stack, Text } from "@chakra-ui/react";
 import { PaginationItem } from "./PaginationItem";
-import { useEffect } from "react";
 
 interface PatinationProps {
     totalCountOfRegisters: number;
@@ -17,13 +16,6 @@ export function Pagination({
     currentPage = 1,
     registersPerPage = 10
 }: PatinationProps) {
-    useEffect(() => {
-        if (totalCountOfRegisters < (currentPage - 1) * registersPerPage) {
-            onPageChange(1)
-        }
-
-    }, [totalCountOfRegisters, onPageChange, currentPage, registersPerPage])
-
     const lastPage = Math.ceil(totalCountOfRegisters / registersPerPage)
 
     const firstRegister = totalCountOfRegisters > 0 ? (currentPage - 1) * registersPerPage + 1 : 0

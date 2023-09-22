@@ -4,7 +4,7 @@ import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
 import NextLink from 'next/link'
 import { SearchParticipantInput } from "~/components/SearchParticipantInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pagination } from "~/components/Pagination";
 import { STUDENTS_PER_PAGE } from "~/utils/constants";
 import { useDebounce } from "@uidotdev/usehooks";
@@ -22,6 +22,12 @@ export default function Participants() {
         page: currentPage,
         perPage: STUDENTS_PER_PAGE
     })
+
+    useEffect(() => {
+        if (participants.data?.pagination.page) {
+            setCurrentPage(participants.data.pagination.page)
+        }
+    }, [participants.data?.pagination.page])
 
     return (
         <DashboardLayout>
