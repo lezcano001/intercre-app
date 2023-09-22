@@ -1,12 +1,12 @@
 import { type ChangeEvent } from "react";
 import { StandardInput } from "./ui/StandardInput";
 
-interface SearchStudentProps {
+interface SearchParticipantInputProps {
     searchText: string;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function SearchStudent({ onChange, searchText }: SearchStudentProps) {
+export function SearchParticipantInput({ onChange, searchText }: SearchParticipantInputProps) {
     return (
         <StandardInput
             containerClassName="

@@ -3,7 +3,7 @@ import { StudentsTable } from "~/components/StudentsTable";
 import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
 import NextLink from 'next/link'
-import { SearchStudent } from "~/components/SearchStudent";
+import { SearchParticipantInput } from "~/components/SearchParticipantInput";
 import { useState } from "react";
 import { Pagination } from "~/components/Pagination";
 import { STUDENTS_PER_PAGE } from "~/utils/constants";
@@ -52,7 +52,7 @@ export default function Participants() {
                             w-full
                             justify-end"
                     >
-                        <SearchStudent
+                        <SearchParticipantInput
                             searchText={searchInput}
                             onChange={(e) => {setSearchInput(e.target.value)}}
                         />
