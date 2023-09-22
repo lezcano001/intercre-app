@@ -1,12 +1,24 @@
 import { Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
-import { api } from "~/utils/api";
 import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
+import { type GENDERS } from "~/utils/constants";
 
-export function TeachersTable() {
-    const participants = api.participants.getAll.useQuery({
-        participantType: 'TEACHER'
-    })
+type Participant = {
+    institution: {
+        ISO: number;
+        abbreviation: string;
+    };
+    CI: string;
+    firstname: string;
+    lastname: string;
+    gender: typeof GENDERS[number];
+}
 
+interface TeachersTableProps {
+    participants?: Participant[];
+    isLoading: boolean;
+}
+
+export function TeachersTable({ isLoading, participants }: TeachersTableProps) {
     return (
         <TableContainer>
             <Table variant='simple'>
@@ -23,7 +35,7 @@ export function TeachersTable() {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {participants.isFetching ? (
+                    {isLoading ? (
                         <Tr>
                         <Td
                             colSpan={3}
@@ -42,7 +54,7 @@ export function TeachersTable() {
                         </Td>
                     </Tr>
                     ) : (
-                        participants?.data && participants.data.length > 0 ? (participants.data.map(participant => (
+                        participants && participants.length > 0 ? (participants.map(participant => (
                             <Tr
                                 key={participant.CI}
                             >
