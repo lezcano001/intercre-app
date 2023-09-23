@@ -77,7 +77,7 @@ export function Sidebar() {
                         justify-between
                         h-20
                         py-2
-                        px-6
+                        px-8
                         border-b-[1px]
                         border-b-slate-200"
                     >
