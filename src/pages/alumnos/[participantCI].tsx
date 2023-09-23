@@ -25,7 +25,9 @@ export default function ParticipantCI() {
                         items-center
                         w-full
                         mb-16
-                        justify-between"
+                        justify-between
+                        flex-wrap
+                        gap-8"
                 >
                     <Flex
                         className="
@@ -47,7 +49,8 @@ export default function ParticipantCI() {
                         <Heading
                             as="h1"
                             className="
-                                !text-2xl
+                                !text-xl
+                                sm:!text-2xl
                                 text-gray-600"
                         >
                             Información del Alumno
@@ -71,9 +74,12 @@ export default function ParticipantCI() {
                 </Flex>
                 <Grid
                     className="
-                        w-full"
-                    templateColumns="repeat(2, 1fr)"
-                    gap="9"
+                        w-full
+                        flex
+                        flex-col
+                        md:grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]
+                        gap-9
+                        mb-10"
                 >
                     <GridItem>
                         <StandardInputViewer

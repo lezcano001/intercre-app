@@ -1,4 +1,4 @@
-import { Flex, IconButton, Heading, Grid, GridItem, Button, useToast } from "@chakra-ui/react"
+import { Flex, IconButton, Heading, Grid, GridItem, Button, useToast, Box } from "@chakra-ui/react"
 import { RiArrowLeftLine } from "react-icons/ri"
 import { DashboardLayout } from "~/components/layouts/DashboardLayout"
 import { StandardInput } from "~/components/ui/StandardInput"
@@ -198,111 +198,120 @@ export default function EditParticipant() {
                     <Heading
                         as="h1"
                         className="
-                            !text-2xl
+                            !text-xl
+                            sm:!text-2xl
                             text-gray-600"
                     >
                         Editar Alumno
                     </Heading>
                 </Flex>
-                <Grid
+                <Box
                     className="
                         w-full"
-                    as="form"
-                    templateColumns="repeat(2, 1fr)"
-                    gap="9"
-                    onSubmit={e => {
-                        void handleUpdateParticipant(e)
-                    }}
+                        as="form"
+                        onSubmit={e => {
+                            void handleUpdateParticipant(e)
+                        }}
                 >
-                    <GridItem>
-                        <StandardInput
-                            value={CIInput}
-                            onChange={e => setCIInput(e.target.value)}
-                            label="Documento de Identidad:"
-                            isError={zodErrors.ci}
-                            isRequired
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <StandardInput
-                            label="Nombres:"
-                            value={nameInput}
-                            onChange={e => setNameInput(e.target.value)}
-                            isError={zodErrors.firstname}
-                            isRequired
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <StandardInput
-                            label="Apellidos:"
-                            value={lastNameInput}
-                            onChange={e => setLastNameInput(e.target.value)}
-                            isError={zodErrors.lastname}
-                            isRequired
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <StandardSelectInput
-                            label="Sexo:"
-                            options={GENDERS.map((gender) => {
-                                return {
-                                    label: GENDERS_MAP[gender],
-                                    value: gender
-                                }
-                            })}
-                            value={genderInput}
-                            onChange={e => setGenderInput(e.target.value as (typeof GENDERS)[number])}
-                            isError={zodErrors.gender}
-                            isRequired
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <StandardInput
-                            label="Fecha de Nacimiento:"
-                            value={birthdateInput}
-                            onChange={e => setBirthdateInput(e.target.value)}
-                            type="date"
-                            isError={zodErrors.birthDate}
-                            isRequired
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <StandardSelectInput
-                            label="Institución:"
-                            options={getAvailableInstitutions.data ?
-                                getAvailableInstitutions.data?.map((institution) => {
-                                    return {
-                                        label: institution.name,
-                                        value: institution.ISO
-                                    }
-                                }) : []
-                            }
-                            value={institutionInput}
-                            onChange={e => setInstitutionInput(parseInt(e.target.value))}
-                            isError={zodErrors.institution}
-                            isRequired
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <StandardInput
-                            label="Email:"
-                            value={emailInput}
-                            onChange={e => setEmailInput(e.target.value)}
-                            isError={zodErrors.email}
-                        />
-                    </GridItem>
-                    <GridItem>
-                        <StandardInput
-                            label="Teléfono:"
-                            value={telephoneInput}
-                            onChange={e => setTelephoneInput(e.target.value)}
-                            isError={zodErrors.telephone}
-                        />
-                    </GridItem>
-                    <GridItem
-                        colSpan={2}
+                    <Grid
                         className="
+                            w-full
                             flex
+                            flex-col
+                            md:grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]
+                            gap-9
+                            mb-10"
+                    >
+                        <GridItem>
+                            <StandardInput
+                                value={CIInput}
+                                onChange={e => setCIInput(e.target.value)}
+                                label="Documento de Identidad:"
+                                isError={zodErrors.ci}
+                                isRequired
+                            />
+                        </GridItem>
+                        <GridItem>
+                            <StandardInput
+                                label="Nombres:"
+                                value={nameInput}
+                                onChange={e => setNameInput(e.target.value)}
+                                isError={zodErrors.firstname}
+                                isRequired
+                            />
+                        </GridItem>
+                        <GridItem>
+                            <StandardInput
+                                label="Apellidos:"
+                                value={lastNameInput}
+                                onChange={e => setLastNameInput(e.target.value)}
+                                isError={zodErrors.lastname}
+                                isRequired
+                            />
+                        </GridItem>
+                        <GridItem>
+                            <StandardSelectInput
+                                label="Sexo:"
+                                options={GENDERS.map((gender) => {
+                                    return {
+                                        label: GENDERS_MAP[gender],
+                                        value: gender
+                                    }
+                                })}
+                                value={genderInput}
+                                onChange={e => setGenderInput(e.target.value as (typeof GENDERS)[number])}
+                                isError={zodErrors.gender}
+                                isRequired
+                            />
+                        </GridItem>
+                        <GridItem>
+                            <StandardInput
+                                label="Fecha de Nacimiento:"
+                                value={birthdateInput}
+                                onChange={e => setBirthdateInput(e.target.value)}
+                                type="date"
+                                isError={zodErrors.birthDate}
+                                isRequired
+                            />
+                        </GridItem>
+                        <GridItem>
+                            <StandardSelectInput
+                                label="Institución:"
+                                options={getAvailableInstitutions.data ?
+                                    getAvailableInstitutions.data?.map((institution) => {
+                                        return {
+                                            label: institution.name,
+                                            value: institution.ISO
+                                        }
+                                    }) : []
+                                }
+                                value={institutionInput}
+                                onChange={e => setInstitutionInput(parseInt(e.target.value))}
+                                isError={zodErrors.institution}
+                                isRequired
+                            />
+                        </GridItem>
+                        <GridItem>
+                            <StandardInput
+                                label="Email:"
+                                value={emailInput}
+                                onChange={e => setEmailInput(e.target.value)}
+                                isError={zodErrors.email}
+                            />
+                        </GridItem>
+                        <GridItem>
+                            <StandardInput
+                                label="Teléfono:"
+                                value={telephoneInput}
+                                onChange={e => setTelephoneInput(e.target.value)}
+                                isError={zodErrors.telephone}
+                            />
+                        </GridItem>
+                    </Grid>
+                    <Flex
+                        className="
+                            flex-col
+                            sm:flex-row
                             gap-4
                             justify-end"
                     >
@@ -320,8 +329,8 @@ export default function EditParticipant() {
                         >
                             Guardar Cambios
                         </Button>
-                    </GridItem>
-                </Grid>
+                    </Flex>
+                </Box>
             </Card>
         </DashboardLayout>
     )

@@ -80,7 +80,7 @@ export function StudentsTable({ participants, isLoading }: StudentsTableProps) {
                                         >
                                             <Button
                                                 as={NextLink}
-                                                href={`/alumnos/${participant.CI}`}
+                                                href={"/alumnos/" + participant.CI}
                                             >
                                                 Ver
                                             </Button>

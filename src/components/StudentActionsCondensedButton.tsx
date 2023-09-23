@@ -3,6 +3,8 @@ import { RiMore2Line } from 'react-icons/ri'
 import { DeleteParticipantModal } from "./DeleteParticipantModal";
 import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
 
+import NextLink from 'next/link'
+
 interface StudentActionsCondensedButtonProps {
     participantCI: string;
     institutionAbbreviation: string;
@@ -38,10 +40,16 @@ export function StudentActionsCondensedButton({
                 </Text>
             </MenuButton>
             <MenuList>
-                <MenuItem>
+                <MenuItem
+                    as={NextLink}
+                    href={"/alumnos/" + participantCI}
+                >
                     Ver
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                    as={NextLink}
+                    href={"/alumnos/editar/" + participantCI}
+                >
                     Editar
                 </MenuItem>
                 <GenerateParticipantCredentialPDFModal
