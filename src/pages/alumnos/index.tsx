@@ -50,9 +50,7 @@ export default function Participants() {
                         className="
                             !text-xl
                             sm:!text-2xl
-                            text-gray-600
-                            inline-block
-                            whitespace-nowrap"
+                            text-gray-600"
                     >
                         Listado de Alumnos
                     </Heading>
