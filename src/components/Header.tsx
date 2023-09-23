@@ -6,7 +6,7 @@ import { useSidebar } from "~/contexts/SidebarContext";
 export function Header() {
     const { data: session } = useSession()
 
-    const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
+    const [isLargerThan900] = useMediaQuery('(min-width: 900px)')
 
     const { onOpen } = useSidebar()
 
@@ -17,7 +17,7 @@ export function Header() {
                 w-full
                 max-h-[5rem]
                 h-full
-                ${isLargerThan768 ? 'px-12' : 'px-8'}
+                ${isLargerThan900 ? 'px-12' : 'px-8'}
                 bg-white
                 border-b-[1px]
                 border-b-slate-200`}
@@ -27,9 +27,9 @@ export function Header() {
                     h-full
                     w-full
                     items-center
-                    ${isLargerThan768 ? 'justify-end' : 'justify-between'}`}
+                    ${isLargerThan900 ? 'justify-end' : 'justify-between'}`}
             >
-                {!isLargerThan768 ? (
+                {!isLargerThan900 ? (
                     <Button
                         onClick={onOpen}
                     >
@@ -56,9 +56,9 @@ export function Header() {
                                 md:gap-5
                                 text-sm
                                 md:text-base
-                                border-l-[1px]
-                                border-l-gray-300
-                                pl-8"
+                                sm:border-l-[1px]
+                                sm:border-l-gray-300
+                                sm:pl-8"
                         >
                             <Flex
                                 className="
@@ -76,7 +76,7 @@ export function Header() {
                                 </Text>
                             </Flex>
                             <Avatar
-                                size={isLargerThan768 ? "md" : "sm"}
+                                size={isLargerThan900 ? "md" : "sm"}
                             />
                         </Flex>
                     </MenuButton>
