@@ -11,10 +11,11 @@ export function Card({ children, className = "" }: CardProps) {
     return (
         <Flex
             className={twMerge(`
-                p-12
+                p-8
+                md:p-12
                 bg-white
-                shadow-sm
-                rounded-xl`, className)}
+                sm:shadow-sm
+                sm:rounded-xl`, className)}
         >
             { children }
         </Flex>

@@ -6,7 +6,7 @@ import { Navbar } from "./Navbar";
 import { CRECELogotype } from "../CRECELogotype";
 
 export function Sidebar() {
-    const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
+    const [isLargerThan900] = useMediaQuery('(min-width: 900px)')
 
     const { isOpen, onClose } = useSidebar()
 
@@ -14,14 +14,13 @@ export function Sidebar() {
         onClose()
         
     // eslint-disable-next-line
-    }, [isLargerThan768])
+    }, [isLargerThan900])
 
-    if (isLargerThan768) {
+    if (isLargerThan900) {
         return (
             <Flex
                 className="
-                    max-w-[18rem]
-                    w-full
+                    min-w-[18rem]
                     h-full
                     bg-sky-800
                     flex-col"

@@ -1,8 +1,9 @@
-import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, Button, Spinner, Text } from "@chakra-ui/react";
+import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, Button, Spinner, Text, useMediaQuery } from "@chakra-ui/react";
 
 import NextLink from 'next/link'
 import { DeleteParticipantModal } from "./DeleteParticipantModal";
 import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
+import { StudentActionsCondensedButton } from "./StudentActionsCondensedButton";
 
 type Participant = {
     participantAge: number;
@@ -21,19 +22,27 @@ interface StudentsTableProps {
 }
 // Add the sorting to the table headers
 export function StudentsTable({ participants, isLoading }: StudentsTableProps) {
+    const [isLargerThan640] = useMediaQuery('(min-width: 640px)')
+
     return (
-        <TableContainer>
-            <Table variant='simple'>
+        <TableContainer
+            className="
+                text-sm
+                sm:text-base"
+        >
+            <Table
+                variant='simple'
+            >
                 <Thead>
                     <Tr>
                         <Th
                             className="
                                 w-[20%]"
                         >
-                            DOC DE IDENTIDAD
+                            {isLargerThan640 ? "DOC. DE IDENTIDAD" : "DOC. Nº"}
                         </Th>
-                        <Th>NOMBRE Y APELLIDO</Th>
-                        <Th isNumeric>ACCIONES</Th>
+                        <Th>{isLargerThan640 ? "NOMBRE Y APELLIDO" : "NOMBRE"}</Th>
+                        <Th isNumeric>{isLargerThan640 ? "ACCIONES" : ""}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -63,34 +72,41 @@ export function StudentsTable({ participants, isLoading }: StudentsTableProps) {
                                 <Td>{participant.CI}</Td>
                                 <Td>{participant.firstname + ' ' + participant.lastname}</Td>
                                 <Td isNumeric>
-                                    <Flex
-                                        className="
-                                            gap-2.5
-                                            justify-end"
-                                    >
-                                        <Button
-                                            as={NextLink}
-                                            href={`/alumnos/${participant.CI}`}
+                                    {isLargerThan640 ? (
+                                        <Flex
+                                            className="
+                                                gap-2.5
+                                                justify-end"
                                         >
-                                            Ver
-                                        </Button>
-                                        <Button
-                                            as={NextLink}
-                                            href={"/alumnos/editar/" + participant.CI}
-                                        >
-                                            Editar
-                                        </Button>
-                                        <GenerateParticipantCredentialPDFModal
-                                            CI={participant.CI}
-                                            institution={participant.institution.abbreviation}
-                                            name={participant.firstname + ' ' + participant.lastname}
-                                            participantType="STUDENT"
-                                            age={participant.participantAge}
-                                        />
-                                        <DeleteParticipantModal
-                                            participantCI={String(participant.CI)}
-                                        />
-                                    </Flex>
+                                            <Button
+                                                as={NextLink}
+                                                href={`/alumnos/${participant.CI}`}
+                                            >
+                                                Ver
+                                            </Button>
+                                            <Button
+                                                as={NextLink}
+                                                href={"/alumnos/editar/" + participant.CI}
+                                            >
+                                                Editar
+                                            </Button>
+                                            <GenerateParticipantCredentialPDFModal
+                                                CI={participant.CI}
+                                                institution={participant.institution.abbreviation}
+                                                name={participant.firstname + ' ' + participant.lastname}
+                                                participantType="STUDENT"
+                                                age={participant.participantAge}
+                                            />
+                                            <DeleteParticipantModal
+                                                participantCI={participant.CI}
+                                            />
+                                        </Flex>
+                                    ) : <StudentActionsCondensedButton
+                                        institutionAbbreviation={participant.institution.abbreviation}
+                                        participantAge={participant.participantAge}
+                                        participantCI={participant.CI}
+                                        participantName={participant.firstname + ' ' + participant.lastname}
+                                    />}
                                 </Td>
                             </Tr>
                         ))

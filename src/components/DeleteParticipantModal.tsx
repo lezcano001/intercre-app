@@ -1,4 +1,4 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure, ModalFooter, useToast } from "@chakra-ui/react"
+import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure, ModalFooter, useToast, MenuItem } from "@chakra-ui/react"
 import { TRPCClientError } from "@trpc/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -7,9 +7,10 @@ import { api } from "~/utils/api";
 interface DeleteParticipantModalProps {
     participantCI: string;
     onSuccessRedirectTo?: string;
+    as?: "Button" | "MenuItem";
 }
 
-export function DeleteParticipantModal({ participantCI, onSuccessRedirectTo }: DeleteParticipantModalProps) {
+export function DeleteParticipantModal({ participantCI, onSuccessRedirectTo, as = "Button" }: DeleteParticipantModalProps) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
@@ -53,19 +54,20 @@ export function DeleteParticipantModal({ participantCI, onSuccessRedirectTo }: D
                     status: 'error'
                 })
             }
-            // console.log(err)
         }
     }
 
     return (
         <>
-            <Button
-                colorScheme="red"
-                onClick={onOpen}
-                isLoading={isLoading}
-            >
-                Eliminar
-            </Button>
+            {as === "Button" ? (
+                <Button
+                    colorScheme="red"
+                    onClick={onOpen}
+                    isLoading={isLoading}
+                >
+                    Eliminar
+                </Button>
+            ) : <MenuItem onClick={onOpen}>Eliminar</MenuItem>}
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}

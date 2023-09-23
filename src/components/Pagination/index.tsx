@@ -38,7 +38,7 @@ export function Pagination({
     return (
         <Stack
             spacing="6"
-            direction="row"
+            direction={["column", "row"]}
             className="
                 mt-6
                 justify-between

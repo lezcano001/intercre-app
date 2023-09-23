@@ -1,4 +1,4 @@
-import { Flex, useMediaQuery } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { type ReactNode } from "react"
 import { Sidebar } from "../Sidebar";
 import { useSession } from "next-auth/react";
@@ -16,8 +16,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     const { status } = useSession()
     const router = useRouter()
 
-    const [isLargerThan768] = useMediaQuery("(min-width: 768px)")
-
     if (status === "unauthenticated") {
 
         // eslint-disable-next-line
@@ -31,22 +29,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     className="
                         w-full
                         h-screen
-                        bg-gray-100"
+                        bg:white
+                        sm:bg-gray-100"
                 >
                     <Sidebar />
                     <Flex
-                        className="
+                        className={`
                             flex-col
-                            w-full"
+                            w-full
+                            min-[900px]:max-w-[calc(100%-18rem)]`}
                     >
                         <Header />
                         <Flex
                             className={`
-                                flex-col
                                 w-full
-                                py-12
-                                ${isLargerThan768 ? 'px-12' : 'px-8'}
-                                overflow-y-scroll`}
+                                flex-col
+                                sm:p-8
+                                min-[900px]:p-12
+                                overflow-y-auto`}
                         >
                             {children}
                         </Flex>

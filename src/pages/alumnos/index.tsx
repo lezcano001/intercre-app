@@ -32,7 +32,8 @@ export default function Participants() {
     return (
         <DashboardLayout>
             <Card
-                className="flex-col"
+                className="
+                    flex-col"
             >
                 <Flex
                     className="
@@ -41,36 +42,37 @@ export default function Participants() {
                         justify-between
                         w-full
                         mb-12
-                        gap-20"
+                        flex-wrap
+                        gap-6"
                 >
                     <Heading
                         as="h1"
                         className="
-                            !text-2xl
+                            !text-xl
+                            sm:!text-2xl
                             text-gray-600
+                            inline-block
                             whitespace-nowrap"
                     >
                         Listado de Alumnos
                     </Heading>
-                    <Flex
+                    <Button
+                        as={NextLink}
+                        href="/alumnos/crear"
+                        colorScheme="green"
                         className="
-                            gap-5
-                            w-full
-                            justify-end"
+                            px-4
+                            flex
+                            flex-shrink-0"
                     >
-                        <SearchParticipantInput
-                            searchText={searchInput}
-                            onChange={(e) => {setSearchInput(e.target.value)}}
-                        />
-                        <Button
-                            as={NextLink}
-                            href="/alumnos/crear"
-                            colorScheme="green"
-                        >
-                            Agregar Alumno
-                        </Button>
-                    </Flex>
+                        Agregar Alumno
+                    </Button>
                 </Flex>
+                <SearchParticipantInput
+                    containerClassname="mb-8 min-[800px]:!w-[20rem]"
+                    searchText={searchInput}
+                    onChange={(e) => {setSearchInput(e.target.value)}}
+                />
                 <StudentsTable
                     participants={participants.data?.data.participants}
                     isLoading={participants.isFetching}

@@ -1,4 +1,4 @@
-import { Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { Button, Flex, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react"
 import { PDFViewer } from "@react-pdf/renderer"
 import { useEffect, useState } from "react"
 import { ParticipantCredentialPDF } from "./templates/ParticipantCredentialPDF";
@@ -15,6 +15,7 @@ interface GenerateParticipantCredentialPDFModal {
     institution: string;
     participantType: keyof typeof PARTICIPANTS_TYPES_MAP;
     gender?: "MALE" | "FEMALE";
+    as?: "Button" | "MenuItem"
 }
 
 export function GenerateParticipantCredentialPDFModal({
@@ -23,7 +24,8 @@ export function GenerateParticipantCredentialPDFModal({
     name,
     age,
     participantType,
-    gender
+    gender,
+    as = "Button"
 }: GenerateParticipantCredentialPDFModal) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [renderPDF, setRenderPDF] = useState(false)
@@ -35,12 +37,14 @@ export function GenerateParticipantCredentialPDFModal({
 
     return (
         <>
-            <Button
-                colorScheme="orange"
-                onClick={onOpen}
-            >
-                Imprimir Acreditación
-            </Button>
+            {as === "Button" ? (
+                <Button
+                    colorScheme="orange"
+                    onClick={onOpen}
+                >
+                    Imprimir Acreditación
+                </Button>
+            ) : <MenuItem onClick={onOpen}>Imprimir Acreditación</MenuItem>}
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
