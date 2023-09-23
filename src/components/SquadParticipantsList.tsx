@@ -137,7 +137,7 @@ export function SquadParticipantsList({
                     items-center
                     mt-8
                     rounded-lg
-                    gap-5"
+                    gap-8"
             >
                 {participants.length === 0 ? (
                     <Text

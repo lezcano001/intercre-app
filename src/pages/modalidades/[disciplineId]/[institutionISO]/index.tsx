@@ -46,7 +46,7 @@ export default function SquadList() {
                 className="
                     flex-col
                     w-full
-                    gap-8"
+                    sm:gap-8"
             >
                 <Flex
                     className="
