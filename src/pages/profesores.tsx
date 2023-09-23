@@ -45,16 +45,18 @@ export default function Teachers() {
                     <Heading
                         as="h1"
                         className="
-                            !text-2xl
+                            !text-xl
+                            sm:!text-2xl
                             text-gray-600"
                     >
                         Listado de Profesores
                     </Heading>
-                    <SearchParticipantInput
-                        searchText={searchInput}
-                        onChange={(e) => {setSearchInput(e.target.value)}}
-                    />
                 </Flex>
+                <SearchParticipantInput
+                    containerClassname="mb-8 min-[800px]:!w-[20rem]"
+                    searchText={searchInput}
+                    onChange={(e) => {setSearchInput(e.target.value)}}
+                />
                 <TeachersTable
                     isLoading={participants.isFetching}
                     participants={participants.data?.data.participants}

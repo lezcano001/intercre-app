@@ -1,4 +1,4 @@
-import { Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery } from "@chakra-ui/react";
 import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
 import { type GENDERS } from "~/utils/constants";
 
@@ -19,19 +19,27 @@ interface TeachersTableProps {
 }
 
 export function TeachersTable({ isLoading, participants }: TeachersTableProps) {
+    const [isLargerThan640] = useMediaQuery('(min-width: 640px)')
+
     return (
-        <TableContainer>
-            <Table variant='simple'>
+        <TableContainer
+            className="
+                text-sm
+                sm:text-base"
+        >
+            <Table
+                variant='simple'
+            >
                 <Thead>
                     <Tr>
                         <Th
                             className="
                                 w-[20%]"
                         >
-                            DOC DE IDENTIDAD
+                            {isLargerThan640 ? "DOC. DE IDENTIDAD" : "DOC. Nº"}
                         </Th>
-                        <Th>NOMBRE Y APELLIDO</Th>
-                        <Th isNumeric>ACCIONES</Th>
+                        <Th>{isLargerThan640 ? "NOMBRE Y APELLIDO" : "NOMBRE"}</Th>
+                        <Th isNumeric>{isLargerThan640 ? "ACCIONES" : ""}</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
@@ -61,19 +69,21 @@ export function TeachersTable({ isLoading, participants }: TeachersTableProps) {
                                 <Td>{participant.CI}</Td>
                                 <Td>{participant.firstname + ' ' + participant.lastname}</Td>
                                 <Td isNumeric>
-                                    <Flex
-                                        className="
-                                            gap-2.5
-                                            justify-end"
-                                    >
-                                        <GenerateParticipantCredentialPDFModal
-                                            CI={participant.CI}
-                                            institution={participant.institution.abbreviation}
-                                            name={participant.firstname + ' ' + participant.lastname}
-                                            participantType="TEACHER"
-                                            gender={participant.gender}
-                                        />
-                                    </Flex>
+                                    {isLargerThan640 ? (
+                                        <Flex
+                                            className="
+                                                gap-2.5
+                                                justify-end"
+                                        >
+                                            <GenerateParticipantCredentialPDFModal
+                                                CI={participant.CI}
+                                                institution={participant.institution.abbreviation}
+                                                name={participant.firstname + ' ' + participant.lastname}
+                                                participantType="TEACHER"
+                                                gender={participant.gender}
+                                            />
+                                        </Flex>
+                                    ) : null} {/* As action view the element instead print PDF for now */}
                                 </Td>
                             </Tr>
                         ))) : (
