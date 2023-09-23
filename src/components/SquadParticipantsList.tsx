@@ -76,36 +76,45 @@ export function SquadParticipantsList({
                         w-full
                         justify-between
                         border-[1px]
+                        gap-8
                         border-slate-200
                         rounded-lg
-                        items-center"
+                        items-center
+                        flex-wrap"
                 >
                     <Box
                         className="
-                            text-gray-600"
+                            text-gray-600
+                            w-full
+                            max-w-md"
                     >
-                        <Heading
-                            as="h3"
+                        <Box
                             className="
-                                mb-4
-                                !text-lg"
+                                w-full"
                         >
-                            {participant.name}
-                        </Heading>
+                            <Heading
+                                as="h3"
+                                className="
+                                    mb-4
+                                    !text-lg"
+                            >
+                                {participant.name}
+                            </Heading>
+                        </Box>
                         <Text>
                             <Text className="text-slate-600" as="strong">C.I.:</Text> 6.656.045
                         </Text>
                     </Box>
                     <Flex
                         className="
-                            gap-3"
+                            gap-3
+                            flex-col
+                            sm:flex-row
+                            sm:w-fit
+                            sm:flex-wrap
+                            w-full"
                     >
                         <Button>
-                            Cargar Foto
-                        </Button>
-                        <Button
-                            colorScheme="green"
-                        >
                             Acreditación - PDF
                         </Button>
                         <Button
@@ -141,6 +150,7 @@ export function SquadParticipantsList({
                 ) : null}
                 {participants.length < participantsLimit ? (
                     <SuscribeParticipantToSquadButton
+                        triggerClassname="w-full"
                         disciplineId={disciplineId}
                         allowedParticipantType={allowedParticipantType}
                         institutionISO={institutionISO}

@@ -11,6 +11,7 @@ interface SuscribeParticipantToSquadButtonProps {
     aceptedGenderCategory?: typeof GENDERS_CATEGORIES[number];
     restrictGenders: boolean;
     allowedParticipantType: "STUDENT" | "TEACHER";
+    triggerClassname?: HTMLButtonElement["className"];
 }
 
 export function SuscribeParticipantToSquadButton({
@@ -19,7 +20,8 @@ export function SuscribeParticipantToSquadButton({
     roleId,
     aceptedGenderCategory,
     restrictGenders,
-    allowedParticipantType
+    allowedParticipantType,
+    triggerClassname = ""
 }: SuscribeParticipantToSquadButtonProps) {
     const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -32,6 +34,7 @@ export function SuscribeParticipantToSquadButton({
             <Button
                 colorScheme="green"
                 onClick={onOpen}
+                className={triggerClassname}
             >
                 Agregar participante
             </Button>

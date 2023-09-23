@@ -50,9 +50,12 @@ export default function SquadList() {
             >
                 <Flex
                     className="
-                        items-center
+                        p-8
+                        sm:p-0
                         gap-6
-                        w-full"
+                        w-full
+                        items-center
+                        flex-wrap"
                 >
                     <IconButton
                         colorScheme="yellow"
@@ -71,7 +74,8 @@ export default function SquadList() {
                         as="h1"
                         className="
                             text-gray-600
-                            !text-2xl"
+                            !text-xl
+                            sm:!text-2xl"
                     >
                         {disciplineData?.data?.name} { disciplineData?.data?.genreCategory ? GENDERS_MAP[disciplineData?.data?.genreCategory as keyof typeof GENDERS_MAP] : ""} - Lista de Buena Fe
                     </Heading>
