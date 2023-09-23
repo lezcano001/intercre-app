@@ -17,7 +17,8 @@ export default function Inscriptions() {
                 >
                     <Heading
                         className="
-                            !text-2xl
+                            !text-xl
+                            sm:!text-2xl
                             text-gray-600
                             mb-12"
                     >

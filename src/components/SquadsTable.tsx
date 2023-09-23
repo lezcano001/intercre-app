@@ -1,11 +1,14 @@
-import { Button, Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
+import { Button, Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery } from "@chakra-ui/react";
 import { TRPCError } from "@trpc/server";
 
 import NextLink from 'next/link'
 import { api } from "~/utils/api";
+import { SquadListActionsCondensedButton } from "./SquadListActionsCondensedButton";
 
 export function SquadsTable() {
     const disciplines = api.disciplines.getAll.useQuery()
+
+    const [isLargerThan640] = useMediaQuery('(min-width: 640px)')
 
     if (disciplines?.data instanceof TRPCError) {
         return (
@@ -16,7 +19,11 @@ export function SquadsTable() {
     }
 
     return (
-        <TableContainer>
+        <TableContainer
+            className=" 
+                text-sm
+                sm:text-base"
+        >
             <Table variant='simple'>
                 <Thead>
                     <Tr>
@@ -25,7 +32,7 @@ export function SquadsTable() {
                         <Th
                             isNumeric
                         >
-                            ACCIONES
+                            {isLargerThan640 ? "ACCIONES" : ""}
                         </Th>
                     </Tr>
                 </Thead>
@@ -62,23 +69,30 @@ export function SquadsTable() {
                                 <Td
                                     isNumeric
                                 >
-                                    <Flex
-                                        className="
-                                            gap-2.5
-                                            justify-end"
-                                    >
-                                        <Button
-                                            as={NextLink}
-                                            href={"/modalidades/" + discipline.disciplineId + "/" + discipline.institutionISO}
+                                    {isLargerThan640 ? (
+                                        <Flex
+                                            className="
+                                                gap-2.5
+                                                justify-end"
                                         >
-                                            Editar
-                                        </Button>
-                                        <Button
-                                            colorScheme="green"
-                                        >
-                                            Imprimir
-                                        </Button>
-                                    </Flex>
+                                            <Button
+                                                as={NextLink}
+                                                href={"/modalidades/" + discipline.disciplineId + "/" + discipline.institutionISO}
+                                            >
+                                                Editar
+                                            </Button>
+                                            <Button
+                                                colorScheme="green"
+                                            >
+                                                Imprimir
+                                            </Button>
+                                        </Flex>
+                                    ) : (
+                                        <SquadListActionsCondensedButton
+                                            disciplineId={discipline.disciplineId}
+                                            institutionISO={discipline.institutionISO}
+                                        />
+                                    )}
                                 </Td>
                             </Tr>
                             )) : (
