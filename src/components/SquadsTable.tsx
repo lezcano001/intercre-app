@@ -4,9 +4,10 @@ import { TRPCError } from "@trpc/server";
 import NextLink from 'next/link'
 import { api } from "~/utils/api";
 import { SquadListActionsCondensedButton } from "./SquadListActionsCondensedButton";
+import { PrintSquadListButton } from "./PrintSquadListButton";
 
 export function SquadsTable() {
-    const disciplines = api.disciplines.getAll.useQuery()
+    const disciplines = api.disciplines.getAll.useQuery();
 
     const [isLargerThan640] = useMediaQuery('(min-width: 640px)')
 
@@ -81,11 +82,10 @@ export function SquadsTable() {
                                             >
                                                 Editar
                                             </Button>
-                                            <Button
-                                                colorScheme="green"
-                                            >
-                                                Imprimir
-                                            </Button>
+                                            <PrintSquadListButton
+                                                disciplineId={discipline.disciplineId}
+                                                institutionISO={discipline.institutionISO}
+                                            />
                                         </Flex>
                                     ) : (
                                         <SquadListActionsCondensedButton

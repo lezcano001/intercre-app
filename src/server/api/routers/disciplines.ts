@@ -11,7 +11,8 @@ export const disciplinesRouter = createTRPCRouter({
             return {
                 ...discipline,
                 genreCategory: GENDERS_MAP[discipline.genreCategory as keyof typeof GENDERS_MAP],
-                institutionISO
+                institutionISO,
+                category: discipline.genreCategory
             }
         })
     }),

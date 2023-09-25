@@ -2,11 +2,20 @@ const DEFAULT_USER_IMAGE_URL = '/fallback-participant-profile-image.svg'
 
 const GENDERS_CATEGORIES = ["FEMALE", "MALE", "MIXED"] as const
 
+const PDF_FONT_BASE_SIZE = '0.35cm'
+const PDF_LINE_HEIGHT_BASE_SIZE = 1.8
+
 const GENDERS = ["FEMALE", "MALE"] as const
 const GENDERS_MAP = {
     "FEMALE": "Femenino",
     "MALE": "Masculino",
     "MIXED": "Mixto"
+}
+
+const ROLES_MAP = {
+    PLAYER: "DEPORTISTAS",
+    COACHING_STAFF: "CUERPO TÉCNICO",
+    TEAM_MANAGER: "DELEGADO"
 }
 
 const DISCIPLINES_MAP = {
@@ -35,5 +44,8 @@ export {
     GENDERS_MAP,
     DISCIPLINES_MAP,
     STUDENTS_PER_PAGE,
-    TEACHERS_PER_PAGE
+    TEACHERS_PER_PAGE,
+    PDF_FONT_BASE_SIZE,
+    PDF_LINE_HEIGHT_BASE_SIZE,
+    ROLES_MAP
 }

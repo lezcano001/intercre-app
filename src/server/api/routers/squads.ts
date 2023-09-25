@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { DISCIPLINES_MAP } from "~/utils/constants";
+import { DISCIPLINES_MAP, GENDERS_MAP } from "~/utils/constants";
 import { TRPCError } from "@trpc/server";
 import { ParticipantNotFound, UnauthorizedError } from "~/utils/serverErrors";
 
@@ -24,7 +24,6 @@ export const squadsRouter = createTRPCRouter({
         const discipline = await ctx.prisma.discipline.findUnique({
             where: {
                 disciplineId,
-
             },
             select: {
                 DisciplineRoles: {
@@ -36,17 +35,19 @@ export const squadsRouter = createTRPCRouter({
                                 }
                             },
                             select: {
-                                Participant: {
-                                    select: {
-                                        firstname: true,
-                                        lastname: true,
-                                        CI: true
-                                    }
-                                },
+                                Participant: true
                             },
                         }
                     }
                 },
+                genreCategory: true,
+                name: true
+            }
+        })
+
+        const institution = await ctx.prisma.institution.findUnique({
+            where: {
+                ISO: institutionISO
             }
         })
 
@@ -57,36 +58,47 @@ export const squadsRouter = createTRPCRouter({
             })
         }
 
-        return discipline.DisciplineRoles.map(({
-            participantsLimit,
-            role,
-            SquadParticipants,
-            roleId,
-            restrictGenres,
-            allowedParticipantType
-        }) => {
-            const roleName = participantsLimit > 1 ? DISCIPLINES_MAP[role as keyof typeof DISCIPLINES_MAP].plural : DISCIPLINES_MAP[role as keyof typeof DISCIPLINES_MAP].singular
-
-            return {
-                roleId,
-                role,
-                title: roleName,
+        return {
+            institution: institution,
+            discipline: {
+                ...discipline,
+                genreCategory: GENDERS_MAP[discipline.genreCategory as keyof typeof GENDERS_MAP],
+            },
+            roles: discipline.DisciplineRoles.map(({
                 participantsLimit,
-                allowedParticipantType,
-                participants: SquadParticipants.map(({ Participant: { CI, firstname, lastname } }) => {
-                    return {
-                        CI,
-                        name: firstname + ' ' + lastname
-                    }
-                }),
-                restrictGenres
-            }
-        }).sort((a, b) => {
-            // This makes the PLAYER as the first element and the TEAM_MANAGER as the last
-            if (a.role === 'PLAYER' || b.role === 'TEAM_MANAGER') return -1
-            if (a.role === 'TEAM_MANAGER' || b.role === 'PLAYER') return 1
-            return 0
-        })
+                role,
+                SquadParticipants,
+                roleId,
+                restrictGenres,
+                allowedParticipantType
+            }) => {
+                const roleName = participantsLimit > 1 ? DISCIPLINES_MAP[role as keyof typeof DISCIPLINES_MAP].plural : DISCIPLINES_MAP[role as keyof typeof DISCIPLINES_MAP].singular
+    
+                return {
+                    roleId,
+                    role,
+                    title: roleName,
+                    participantsLimit,
+                    allowedParticipantType,
+                    participants: SquadParticipants.map(({ Participant: { CI, firstname, lastname, birthDate, telephone } }) => {
+                        return {
+                            CI,
+                            name: firstname + ' ' + lastname,
+                            firstname,
+                            lastname,
+                            birthDate,
+                            telephone
+                        }
+                    }),
+                    restrictGenres
+                }
+            }).sort((a, b) => {
+                // This makes the PLAYER as the first element and the TEAM_MANAGER as the last
+                if (a.role === 'PLAYER' || b.role === 'TEAM_MANAGER') return -1
+                if (a.role === 'TEAM_MANAGER' || b.role === 'PLAYER') return 1
+                return 0
+            })
+        }
     }),
     suscribeToSquad: protectedProcedure.input(z.object({
         disciplineId: z.string(),
