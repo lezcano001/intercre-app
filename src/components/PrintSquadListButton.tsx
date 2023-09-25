@@ -14,7 +14,6 @@ interface PrintSquadListButton {
 }
 
 export function PrintSquadListButton({
-    category,
     disciplineId,
     institutionISO,
     as = "Button"
