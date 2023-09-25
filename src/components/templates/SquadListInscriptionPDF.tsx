@@ -28,6 +28,11 @@ Font.register({
             src: 'assets/Roboto-RegularItalic.ttf',
             fontWeight: 'normal',
             fontStyle: 'italic'
+        },
+        {
+            src: 'assets/Roboto-BoldItalic.ttf',
+            fontWeight: 'bold',
+            fontStyle: 'italic'
         }
     ]
 })
@@ -236,16 +241,13 @@ los exámenes médicos pertinente, por lo que son declarados aptos y hábiles pa
                         <KeyValueListVariant2
                             data={[
                                 {
-                                    key: 'Prof. Médico',
-                                    value: 'Juan González'
+                                    key: 'Prof. Médico'
                                 },
                                 {
-                                    key: 'Matrícula Médica',
-                                    value: '123456'
+                                    key: 'Matrícula Médica'
                                 },
                                 {
-                                    key: 'Fecha',
-                                    value: '15/09/2023'
+                                    key: 'Fecha'
                                 },
                             ]}
                         />
@@ -271,7 +273,7 @@ los exámenes médicos pertinente, por lo que son declarados aptos y hábiles pa
                             lineHeight: PDF_LINE_HEIGHT_BASE_SIZE
                         }}
                     >
-                    Los Directivos de la Institución ______________________________________________________, la Supervisión Pedagógica y Supervisión Administraba de
+                    Los Directivos de la Institución <Text style={{ fontWeight: 'bold' }}>{institution}</Text>, la Supervisión Pedagógica y Supervisión Administraba de
 la Zona __________ certificamos que los atletas representan a esta institución educativa
                     </Text>
                     <View
@@ -279,8 +281,8 @@ la Zona __________ certificamos que los atletas representan a esta institución 
                             width: '100%',
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '1.4cm',
-                            marginTop: '1.4cm'
+                            gap: '1.6cm',
+                            marginTop: '1.6cm'
                         }}
                     >
                         <SignLine
@@ -290,9 +292,6 @@ la Zona __________ certificamos que los atletas representan a esta institución 
                             role="Supervisión Pedagógica"
                         />
                         <SignLine
-                            role="Supervisión Administrativa"
-                        />
-                        <SignLine
                             role="Recibido Por"
                         />
                     </View>
@@ -300,11 +299,12 @@ la Zona __________ certificamos que los atletas representan a esta institución 
                     <Text
                         style={{
                             fontStyle: 'italic',
-                            lineHeight: PDF_LINE_HEIGHT_BASE_SIZE
+                            lineHeight: PDF_LINE_HEIGHT_BASE_SIZE,
+                            marginTop: '0.6cm'
                         }}
                     >
                     Al presentar esta ficha de inscripción la institución acepta estar de acuerdo y en conocimiento sobre las responsabilidades mencionadas en el Reglamento del
-INTERECRE 2023. La autorización de los menores para su participación en el INTERCRE 2023 es de absoluta responsabilidad de la Institución Educativa
+INTERECRE 2023. La autorización de los menores para su participación en el INTERCRE 2023 es de absoluta responsabilidad de la Institución Educativa de Origen.
                     </Text>
                 </View>
                 {/* Footer */}

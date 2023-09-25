@@ -45,9 +45,9 @@ export function PrintSquadListButton({
                     colorScheme="orange"
                     onClick={onOpen}
                 >
-                    Imprimir Acreditación
+                    Imprimir Lista de Buena Fe
                 </Button>
-            ) : <MenuItem onClick={onOpen}>Imprimir Acreditación</MenuItem>}
+            ) : <MenuItem onClick={onOpen}>Imprimir Lista de Buena Fe</MenuItem>}
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
@@ -62,7 +62,7 @@ export function PrintSquadListButton({
                         className="
                             text-gray-600"
                     >
-                        Previsualización de Acreditación 
+                        Previsualización de Lista de Buena Fe 
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>

@@ -3,15 +3,16 @@ import { Text, View } from "@react-pdf/renderer";
 interface KeyValueListVariant2Props {
     data: {
         key: string;
-        value: string;
+        value?: string;
     }[];
     keySize?: string;
     valueGap?: string;
     valueSize?: string;
     itemHeight?: string;
+    isEmpty?: boolean;
 }
 
-export function KeyValueListVariant2({ data, keySize = '3.2cm', valueGap = '0.3cm', itemHeight = '0.6cm' }: KeyValueListVariant2Props) {
+export function KeyValueListVariant2({ data, keySize = '3.2cm', valueGap = '0.3cm', itemHeight = '0.6cm', isEmpty = false }: KeyValueListVariant2Props) {
     return (
         <View
             style={{
@@ -52,7 +53,13 @@ export function KeyValueListVariant2({ data, keySize = '3.2cm', valueGap = '0.3c
                     >
                         :
                     </Text>
-                    <View>
+                    <View
+                        style={{
+                            borderBottom: '0.5px solid black',
+                            width: '5cm',
+                            height: itemHeight
+                        }}
+                    >
                         <Text>
                             {item.value}
                         </Text>
