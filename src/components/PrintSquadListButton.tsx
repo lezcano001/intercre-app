@@ -8,7 +8,6 @@ import { ROLES_MAP } from "~/utils/constants";
 
 interface PrintSquadListButton {
     disciplineId: string;
-    category: string;
     institutionISO: number;
     as?: "Button" | "MenuItem";
 }
