@@ -48,7 +48,7 @@ export function GenerateParticipantCredentialPDFModal({
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
-                size="2xl"
+                size="6xl"
             >
                 <ModalOverlay />
                 <ModalContent
