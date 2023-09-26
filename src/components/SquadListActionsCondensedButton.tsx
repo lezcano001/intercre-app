@@ -2,15 +2,20 @@ import { IconButton, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-
 import { RiMore2Line } from "react-icons/ri";
 
 import NextLink from 'next/link'
+import { GenerateSquadListPDF } from "./GenerateSquadListPDF";
 
 interface SquadListActionsCondensedButtonProps {
     disciplineId: string;
     institutionISO: number;
+    institutionName: string;
+    category: string;
 }
 
 export function SquadListActionsCondensedButton({
     disciplineId,
-    institutionISO
+    institutionISO,
+    institutionName,
+    category
 }: SquadListActionsCondensedButtonProps) {
     return (
         <Menu>
@@ -40,9 +45,13 @@ export function SquadListActionsCondensedButton({
                 >
                     Editar
                 </MenuItem>
-                <MenuItem>
-                    Imprimir
-                </MenuItem>
+                <GenerateSquadListPDF
+                    category={category}
+                    as="MenuItem"
+                    disciplineId={disciplineId}
+                    institutionISO={institutionISO}
+                    institutionName={institutionName}
+                />
             </MenuList>
         </Menu>
     )

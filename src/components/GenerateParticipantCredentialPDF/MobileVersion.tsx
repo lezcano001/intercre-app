@@ -33,7 +33,7 @@ export function MobileVersion({
                 ) : (
                     <MenuItem
                         as='a'
-                        download={"acreditacion_" + CI + ".pdf"}
+                        download={"Acreditacion_" + CI + ".pdf"}
                         href={instance.url!}
                         disabled={instance.loading}
                     >

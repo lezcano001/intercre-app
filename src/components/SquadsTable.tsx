@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import NextLink from 'next/link'
 import { api } from "~/utils/api";
 import { SquadListActionsCondensedButton } from "./SquadListActionsCondensedButton";
-import { PrintSquadListButton } from "./PrintSquadListButton";
+import { GenerateSquadListPDF } from "./GenerateSquadListPDF";
 
 export function SquadsTable() {
     const disciplines = api.disciplines.getAll.useQuery();
@@ -82,15 +82,19 @@ export function SquadsTable() {
                                             >
                                                 Editar
                                             </Button>
-                                            <PrintSquadListButton
+                                            <GenerateSquadListPDF
                                                 disciplineId={discipline.disciplineId}
                                                 institutionISO={discipline.institutionISO}
+                                                institutionName={discipline.name}
+                                                category={discipline.genreCategory}
                                             />
                                         </Flex>
                                     ) : (
                                         <SquadListActionsCondensedButton
                                             disciplineId={discipline.disciplineId}
+                                            institutionName={discipline.name}
                                             institutionISO={discipline.institutionISO}
+                                            category={discipline.genreCategory}
                                         />
                                     )}
                                 </Td>
