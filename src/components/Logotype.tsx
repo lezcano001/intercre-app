@@ -25,6 +25,7 @@ export function Logotype({ variant = "normal", className = "" }: LogotypeProps) 
         >
             <Image
                 src={LOGOTYPE_VARIANTS_MAP[variant]}
+                priority={true}
                 alt="Logotipo"
                 fill
                 style={{

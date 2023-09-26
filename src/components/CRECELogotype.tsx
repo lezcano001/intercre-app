@@ -18,6 +18,7 @@ export function CRECELogotype({ className = "" }: LogotypeProps) {
             href="/"
         >
             <Image
+                priority={true}
                 src={"/crece-logotype.png"}
                 alt="Logotipo del CRECE"
                 fill
