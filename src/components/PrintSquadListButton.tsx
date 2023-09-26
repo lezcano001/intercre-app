@@ -29,10 +29,6 @@ export function PrintSquadListButton({
         setIsClientSide(true)
     }, [])
 
-    if (squad.isFetching) {
-        return <Spinner />
-    }
-
     if (squad.data instanceof TRPCError) {
         // Poner aquí un toast
         return <Text>Error en el servidor</Text>
@@ -66,36 +62,44 @@ export function PrintSquadListButton({
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        {isClientSide ? (
-                            <PDFViewer
-                                className="
-                                    w-full
-                                    h-[60vh]"
-                            >
-                                <SquadListInscriptionPDF
-                                    institution={"Centro Regional de Educación " + squad.data!.institution?.name}
-                                    department={squad.data!.institution!.department}
-                                    city={squad.data!.institution!.city}
-                                    roles={squad.data!.roles.map(role => {
-                                        return {
-                                            students: role.allowedParticipantType === "STUDENT",
-                                            participants: role.participants.map(participant => {
-                                                return {
-                                                    CI: participant.CI,
-                                                    firstname: participant.firstname,
-                                                    lastname: participant.lastname,
-                                                    birthDate: `${participant.birthDate.getDate()}/${participant.birthDate.getMonth()}/${participant.birthDate.getFullYear()}`,
-                                                    telephone: participant.telephone ?? ""
-                                                }
-                                            }),
-                                            roleName: ROLES_MAP[role.role as keyof typeof ROLES_MAP]
-                                        }
-                                    })}
-                                    discipline={squad.data!.discipline.name}
-                                    category={squad.data!.discipline.genreCategory}
-                                />
-                            </PDFViewer>
-                        ) : null}
+                        {!isClientSide
+                            ?   null
+                            :   squad.isLoading
+                                    ?   <Spinner
+                                            className="
+                                                mx-auto"
+                                        />
+                                    :   (
+                                            <PDFViewer
+                                                className="
+                                                    w-full
+                                                    h-[60vh]"
+                                            >
+                                                <SquadListInscriptionPDF
+                                                    institution={"Centro Regional de Educación " + squad.data!.institution?.name}
+                                                    department={squad.data!.institution!.department}
+                                                    city={squad.data!.institution!.city}
+                                                    roles={squad.data!.roles.map(role => {
+                                                        return {
+                                                            students: role.allowedParticipantType === "STUDENT",
+                                                            participants: role.participants.map(participant => {
+                                                                return {
+                                                                    CI: participant.CI,
+                                                                    firstname: participant.firstname,
+                                                                    lastname: participant.lastname,
+                                                                    birthDate: `${participant.birthDate.getDate()}/${participant.birthDate.getMonth()}/${participant.birthDate.getFullYear()}`,
+                                                                    telephone: participant.telephone ?? ""
+                                                                }
+                                                            }),
+                                                            roleName: ROLES_MAP[role.role as keyof typeof ROLES_MAP]
+                                                        }
+                                                    })}
+                                                    discipline={squad.data!.discipline.name}
+                                                    category={squad.data!.discipline.genreCategory}
+                                                />
+                                            </PDFViewer>
+                                        )
+                        }
                         <Flex
                             className="
                                 w-full
