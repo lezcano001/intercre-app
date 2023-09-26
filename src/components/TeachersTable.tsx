@@ -1,5 +1,5 @@
 import { Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery } from "@chakra-ui/react";
-import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
+import { GenerateParticipantCredentialPDF } from "./GenerateParticipantCredentialPDF";
 import { type GENDERS } from "~/utils/constants";
 
 type Participant = {
@@ -75,7 +75,7 @@ export function TeachersTable({ isLoading, participants }: TeachersTableProps) {
                                                 gap-2.5
                                                 justify-end"
                                         >
-                                            <GenerateParticipantCredentialPDFModal
+                                            <GenerateParticipantCredentialPDF
                                                 CI={participant.CI}
                                                 institution={participant.institution.abbreviation}
                                                 name={participant.firstname + ' ' + participant.lastname}

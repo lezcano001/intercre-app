@@ -1,39 +1,20 @@
-import { Button, Flex, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react"
-import { PDFViewer } from "@react-pdf/renderer"
-import { useEffect, useState } from "react"
-import { ParticipantCredentialPDF } from "./templates/ParticipantCredentialPDF";
+import { Button, Flex, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import { PDFViewer } from "@react-pdf/renderer";
+import { useState, type ReactElement, useEffect } from "react";
 
-const PARTICIPANTS_TYPES_MAP = {
-    "STUDENT": 'ESTUDIANTE',
-    "TEACHER": 'PROFESOR'
-}
-
-interface GenerateParticipantCredentialPDFModal {
-    CI: string;
-    name: string;
-    age?: number;
-    institution: string;
-    participantType: keyof typeof PARTICIPANTS_TYPES_MAP;
-    gender?: "MALE" | "FEMALE";
+interface BrowserVersionProps {
     as?: "Button" | "MenuItem"
+    document: ReactElement;
 }
 
-export function GenerateParticipantCredentialPDFModal({
-    CI,
-    institution,
-    name,
-    age,
-    participantType,
-    gender,
-    as = "Button"
-}: GenerateParticipantCredentialPDFModal) {
+export function BrowserVersion({ document, as = "Button" }: BrowserVersionProps) {
     const { isOpen, onClose, onOpen } = useDisclosure()
-    const [renderPDF, setRenderPDF] = useState(false)
+
+    const [isClientSide, setIsClientSide] = useState(false)
 
     useEffect(() => {
-        setRenderPDF(true)
+        setIsClientSide(true)
     }, [])
-
 
     return (
         <>
@@ -42,9 +23,9 @@ export function GenerateParticipantCredentialPDFModal({
                     colorScheme="orange"
                     onClick={onOpen}
                 >
-                    Imprimir Acreditación
+                    Ver Acreditación
                 </Button>
-            ) : <MenuItem onClick={onOpen}>Imprimir Acreditación</MenuItem>}
+            ) : <MenuItem onClick={onOpen}>Ver Acreditación</MenuItem>}
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
@@ -63,20 +44,13 @@ export function GenerateParticipantCredentialPDFModal({
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        {renderPDF ? (
+                        {isClientSide ? (
                             <PDFViewer
                                 className="
                                     w-full
                                     h-[60vh]"
                             >
-                                <ParticipantCredentialPDF
-                                    CI={CI}
-                                    institution={institution}
-                                    name={name}
-                                    age={age}
-                                    participantType={participantType}
-                                    gender={gender}
-                                />
+                                {document}
                             </PDFViewer>
                         ) : null}
                         <Flex

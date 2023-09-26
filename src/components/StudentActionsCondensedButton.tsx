@@ -1,7 +1,7 @@
 import { IconButton, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { RiMore2Line } from 'react-icons/ri'
 import { DeleteParticipantModal } from "./DeleteParticipantModal";
-import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
+import { GenerateParticipantCredentialPDF } from "./GenerateParticipantCredentialPDF";
 
 import NextLink from 'next/link'
 
@@ -52,7 +52,7 @@ export function StudentActionsCondensedButton({
                 >
                     Editar
                 </MenuItem>
-                <GenerateParticipantCredentialPDFModal
+                <GenerateParticipantCredentialPDF
                     CI={participantCI}
                     institution={institutionAbbreviation}
                     name={participantName}

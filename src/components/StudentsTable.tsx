@@ -2,7 +2,7 @@ import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Flex, Button, Spinner,
 
 import NextLink from 'next/link'
 import { DeleteParticipantModal } from "./DeleteParticipantModal";
-import { GenerateParticipantCredentialPDFModal } from "./GenerateParticipantCredentialPDFModal";
+import { GenerateParticipantCredentialPDF } from "./GenerateParticipantCredentialPDF";
 import { StudentActionsCondensedButton } from "./StudentActionsCondensedButton";
 
 type Participant = {
@@ -90,7 +90,7 @@ export function StudentsTable({ participants, isLoading }: StudentsTableProps) {
                                             >
                                                 Editar
                                             </Button>
-                                            <GenerateParticipantCredentialPDFModal
+                                            <GenerateParticipantCredentialPDF
                                                 CI={participant.CI}
                                                 institution={participant.institution.abbreviation}
                                                 name={participant.firstname + ' ' + participant.lastname}
