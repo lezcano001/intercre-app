@@ -12,6 +12,22 @@ const GENDERS_MAP = {
     "MIXED": "Mixto"
 }
 
+const PARTICIPANTS_TYPES_MAP = {
+    "STUDENT": 'ESTUDIANTE',
+    "TEACHER": 'PROFESOR'
+}
+
+const PARTICIPANTS_GENDERS_TYPES_MAP = {
+    "STUDENT": {
+        "MALE": 'ESTUDIANTE',
+        "FEMALE": 'ESTUDIANTE'
+    },
+    "TEACHER": {
+        "MALE": 'PROFESOR',
+        "FEMALE": 'PROFESORA'
+    }
+}
+
 const ROLES_MAP = {
     PLAYER: "DEPORTISTAS",
     COACHING_STAFF: "CUERPO TÉCNICO",
@@ -33,9 +49,9 @@ const DISCIPLINES_MAP = {
     }
 }
 
-const STUDENTS_PER_PAGE = 4
+const STUDENTS_PER_PAGE = 8
 
-const TEACHERS_PER_PAGE = 4
+const TEACHERS_PER_PAGE = 8
 
 export {
     DEFAULT_USER_IMAGE_URL,
@@ -47,5 +63,7 @@ export {
     TEACHERS_PER_PAGE,
     PDF_FONT_BASE_SIZE,
     PDF_LINE_HEIGHT_BASE_SIZE,
-    ROLES_MAP
+    ROLES_MAP,
+    PARTICIPANTS_TYPES_MAP,
+    PARTICIPANTS_GENDERS_TYPES_MAP
 }

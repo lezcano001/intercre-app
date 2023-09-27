@@ -1,0 +1,235 @@
+import { Document, Font, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { type GENDERS, PARTICIPANTS_GENDERS_TYPES_MAP } from "~/utils/constants";
+
+type Participant = {
+    CI: string;
+    name: string;
+    age?: number;
+    institution: string;
+    participantType: keyof typeof PARTICIPANTS_GENDERS_TYPES_MAP;
+    gender?: typeof GENDERS[number];
+}
+
+interface ParticipantCredentialPDF {
+    participants: Participant[];
+}
+
+Font.register({
+    family: 'Inter',
+    fonts: [
+        {
+            src: '/assets/Inter-Bold.ttf',
+            fontWeight: 'bold'
+        },
+        {
+            src: '/assets/Inter-Regular.ttf',
+            fontWeight: 'normal'
+        },
+        {
+            src: '/assets/Inter-ExtraBold.ttf',
+            fontWeight: 'ultrabold'
+        }
+    ]
+})
+
+Font.register({
+    family: 'Open-Sans',
+    fonts: [
+        {
+            src: '/assets/OpenSans-Regular.ttf',
+            fontWeight: 'normal'
+        }
+    ]
+})
+
+const styles = StyleSheet.create({
+    body: {
+      padding: 10
+    },
+    CardContainer: {
+        width: '7cm',
+        height: '10cm',
+        border: '1px solid black',
+    },
+    HeaderContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        height: '2.4cm',
+        marginTop: '0.5cm',
+        gap: '0.5cm',
+        marginHorizontal: 'auto'
+    },
+    Image: {
+        width: '2cm',
+        height: '2cm',
+    },
+    Logotype: {
+        width: '1.8cm',
+        height: '1.8cm'
+    },
+    BodyContainer: {
+        paddingHorizontal: '0.8cm',
+        fontSize: '0.4cm',
+        fontFamily: 'Inter',
+        height: '100%'
+    },
+    Title: {
+        fontSize: '0.55cm',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: '0.6cm',
+        marginBottom: '0.4cm',
+        color: '#FF9100'
+    },
+    ListContainer: {
+        display: 'flex',
+        gap: '0.2cm'
+    },
+    ListItem: {
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '0.36cm',
+        gap: '0.1cm',
+        fontFamily: 'Open-Sans',
+        color: '#3F3F46'
+    },
+    ListItemTitle: {
+        fontFamily: 'Inter',
+        fontWeight: 'bold',
+        fontSize: '0.4cm',
+        color: '#000000'
+    },
+    AgeListItem: {
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '0.36cm',
+        gap: '0.1cm',
+        marginTop: '0.2cm'
+    },
+    FooterContainer: {
+        fontFamily: 'Inter',
+        fontWeight: 'ultrabold',
+        fontSize: '0.40cm',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '1.4cm',
+        backgroundColor: '#B4140F',
+        color: 'white',
+    },
+});
+
+export function BulkParticipantsCredentialsPDF ({
+    participants
+}: ParticipantCredentialPDF) {
+    return (
+        <Document>
+            <Page
+                orientation="landscape"
+                style={styles.body}
+            >
+                <View
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        gap: '0.2cm',
+                        flexWrap: 'wrap',
+                        flexDirection: 'row'
+                    }}
+                >
+                    {participants.map(({
+                        CI,
+                        institution,
+                        name,
+                        participantType,
+                        age,
+                        gender
+                    }) => (
+                        <View
+                            key={CI}
+                            style={styles.CardContainer}
+                            wrap={false}
+                        >
+                            <View
+                                style={styles.HeaderContainer}
+                            >
+                                {/* eslint-disable-next-line */}
+                                <Image
+                                    style={styles.Logotype}
+                                    src="/crece-logotype.png"
+                                />
+                                {/* eslint-disable-next-line */}
+                                <Image
+                                    style={styles.Image}
+                                    src="/logotype-variant-1.png"
+                                />
+                            </View>
+                            <View style={styles.BodyContainer}>
+                                <View>
+                                    <Text
+                                        style={styles.Title}
+                                    >
+                                        Acreditación Oficial
+                                    </Text>
+                                </View>
+                                <View
+                                    style={styles.ListContainer}
+                                >
+                                    <View
+                                        style={styles.ListItem}
+                                    >
+                                        <Text
+                                            style={styles.ListItemTitle}
+                                        >
+                                            Nombre
+                                        </Text>
+                                        <Text>{name}</Text>
+                                    </View>
+                                    <View
+                                        style={styles.ListItem}
+                                    >
+                                        <Text
+                                            style={styles.ListItemTitle}
+                                        >
+                                            Nro. Documento
+                                        </Text>
+                                        <Text>{CI}</Text>
+                                    </View>
+                                    <View
+                                        style={styles.ListItem}
+                                    >
+                                        <Text
+                                            style={styles.ListItemTitle}
+                                        >
+                                            Institución
+                                        </Text>
+                                        <Text>{institution}</Text>
+                                    </View>
+                                    {participantType === 'STUDENT' ? (
+                                        <View
+                                            style={styles.AgeListItem}
+                                        >
+                                            <Text
+                                                style={styles.ListItemTitle}
+                                            >
+                                                Edad
+                                            </Text>
+                                            <Text>{age}</Text>
+                                        </View>
+                                    ) : null}
+                                </View>
+                            </View>
+                            <View
+                                style={styles.FooterContainer}
+                            >
+                                <Text>{gender ? PARTICIPANTS_GENDERS_TYPES_MAP[participantType][gender] : PARTICIPANTS_GENDERS_TYPES_MAP[participantType].MALE}</Text>
+                            </View>
+                        </View>
+                    ))}
+                </View>
+            </Page>
+        </Document>
+    )
+}

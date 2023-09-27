@@ -9,6 +9,7 @@ import { Pagination } from "~/components/Pagination";
 import { STUDENTS_PER_PAGE } from "~/utils/constants";
 import { useDebounce } from "@uidotdev/usehooks";
 import { api } from "~/utils/api";
+import { GenerateParticipantsCredentialsPDF } from "~/components/BulkActions/GenerateParticipantsCredentialsPDF";
 
 export default function Participants() {
     const [searchInput, setSearchInput] = useState("")
@@ -54,17 +55,24 @@ export default function Participants() {
                     >
                         Listado de Alumnos
                     </Heading>
-                    <Button
-                        as={NextLink}
-                        href="/alumnos/crear"
-                        colorScheme="green"
+                    <Flex
                         className="
-                            px-4
-                            flex
-                            flex-shrink-0"
+                            gap-3
+                            flex-wrap"
                     >
-                        Agregar Alumno
-                    </Button>
+                        <GenerateParticipantsCredentialsPDF />
+                        <Button
+                            as={NextLink}
+                            href="/alumnos/crear"
+                            colorScheme="green"
+                            className="
+                                px-4
+                                flex
+                                flex-shrink-0"
+                        >
+                            Agregar Alumno
+                        </Button>
+                    </Flex>
                 </Flex>
                 <SearchParticipantInput
                     containerClassname="mb-8 min-[800px]:!w-[20rem]"

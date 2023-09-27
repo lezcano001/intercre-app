@@ -8,6 +8,7 @@ import { api } from "~/utils/api";
 import { TEACHERS_PER_PAGE } from "~/utils/constants";
 import { SearchParticipantInput } from "~/components/SearchParticipantInput";
 import { Pagination } from "~/components/Pagination";
+import { GenerateParticipantsCredentialsPDF } from "~/components/BulkActions/GenerateParticipantsCredentialsPDF";
 
 export default function Teachers() {
     const [searchInput, setSearchInput] = useState("")
@@ -39,6 +40,8 @@ export default function Teachers() {
                         flex
                         items-center
                         justify-between
+                        flex-wrap
+                        gap-6
                         w-full
                         mb-12"
                 >
@@ -51,6 +54,9 @@ export default function Teachers() {
                     >
                         Listado de Profesores
                     </Heading>
+                    <GenerateParticipantsCredentialsPDF
+                        participantType="TEACHER"
+                    />
                 </Flex>
                 <SearchParticipantInput
                     containerClassname="mb-8 min-[800px]:!w-[20rem]"
