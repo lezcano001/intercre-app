@@ -49,7 +49,7 @@ export function ParticipantRoleTable ({ title, data, additionalField = "Firma" }
                         width: '15%'
                     },
                 ]}
-                data={data}
+                data={data.length > 0 ? data : [[]]}
             />
         </View>
     )
