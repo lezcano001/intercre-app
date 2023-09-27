@@ -201,7 +201,7 @@ export function SquadListInscriptionPDF({
                                         return [String(idx + 1), participant.CI, participant.lastname, participant.firstname, participant.birthDate]
                                     }
 
-                                    return [String(idx + 1), participant.CI, participant.lastname, participant.firstname, participant.telephone]
+                                    return [String(idx + 1), participant.CI, participant.lastname, participant.firstname]
                                 })
 
                                 return (<ParticipantRoleTable

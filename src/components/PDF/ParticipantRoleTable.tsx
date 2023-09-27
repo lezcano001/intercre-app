@@ -8,7 +8,7 @@ interface ParticipantRoleTableProps {
     additionalField?: string;
 }
 
-export function ParticipantRoleTable ({ title, data, additionalField = "Teléfono" }: ParticipantRoleTableProps) {
+export function ParticipantRoleTable ({ title, data, additionalField = "Firma" }: ParticipantRoleTableProps) {
     return (
         <View
             style={{
