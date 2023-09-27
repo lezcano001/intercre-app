@@ -28,7 +28,7 @@ export function MobileVersion({
                         as='a'
                         href={instance.url!}
                     >
-                        Descargar Acreditación
+                        Acreditación
                     </Button>
                 ) : (
                     <MenuItem

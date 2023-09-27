@@ -23,9 +23,9 @@ export function BrowserVersion({ document, as = "Button" }: BrowserVersionProps)
                     colorScheme="orange"
                     onClick={onOpen}
                 >
-                    Ver Acreditación
+                    Acreditación
                 </Button>
-            ) : <MenuItem onClick={onOpen}>Ver Acreditación</MenuItem>}
+            ) : <MenuItem onClick={onOpen}>Acreditación</MenuItem>}
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}

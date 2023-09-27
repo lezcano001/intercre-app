@@ -40,7 +40,7 @@ export function MobileVersion({
                     disabled={disabled}
                     className={`${disabled ? '!bg-orange-400' : ''}`}
                 >
-                    Imprimir Lista de Buena Fe {disabled ? "..." : ""}
+                    Imprimir{disabled ? "..." : ""}
                 </Button>
             ) : (
                 <MenuItem
@@ -49,7 +49,7 @@ export function MobileVersion({
                     href={instance.url!}
                     disabled={instance.loading || isLoading}
                 >
-                    Imprimir Lista de Buena Fe {disabled ? "..." : ""}
+                    Imprimir{disabled ? "..." : ""}
                 </MenuItem>
             )}
         </>        

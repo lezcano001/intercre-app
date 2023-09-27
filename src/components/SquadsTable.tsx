@@ -28,7 +28,7 @@ export function SquadsTable() {
             <Table variant='simple'>
                 <Thead>
                     <Tr>
-                        <Th>DEPORTE</Th>
+                        <Th>MODALIDAD</Th>
                         <Th>CATEGORÍA</Th>
                         <Th
                             isNumeric

@@ -27,9 +27,9 @@ export function BrowserVersion({
                     colorScheme="orange"
                     onClick={onOpen}
                 >
-                    Imprimir Lista de Buena Fe
+                    Imprimir
                 </Button>
-            ) : <MenuItem onClick={onOpen}>Imprimir Lista de Buena Fe</MenuItem>}
+            ) : <MenuItem onClick={onOpen}>Imprimir</MenuItem>}
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
