@@ -25,12 +25,12 @@ Font.register({
             fontWeight: 'semibold'
         },
         {
-            src: 'assets/Roboto-RegularItalic.ttf',
+            src: '/assets/Roboto-RegularItalic.ttf',
             fontWeight: 'normal',
             fontStyle: 'italic'
         },
         {
-            src: 'assets/Roboto-BoldItalic.ttf',
+            src: '/assets/Roboto-BoldItalic.ttf',
             fontWeight: 'bold',
             fontStyle: 'italic'
         }
@@ -66,6 +66,8 @@ export function SquadListInscriptionPDF({
     discipline,
     category
 }: SquadListInscriptionPDFProps) {
+    console.log(roles)
+
     return (
         <Document>
             <Page
