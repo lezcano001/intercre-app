@@ -24,15 +24,15 @@ Font.register({
     family: 'Inter',
     fonts: [
         {
-            src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYMZhrib2Bg-4.ttf',
+            src: '/assets/Inter-Bold.ttf',
             fontWeight: 'bold'
         },
         {
-            src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf',
+            src: '/assets/Inter-Regular.ttf',
             fontWeight: 'normal'
         },
         {
-            src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuDyYMZhrib2Bg-4.ttf',
+            src: '/assets/Inter-ExtraBold.ttf',
             fontWeight: 'ultrabold'
         }
     ]
@@ -42,11 +42,12 @@ Font.register({
     family: 'Open-Sans',
     fonts: [
         {
-            src: 'https://fonts.gstatic.com/s/opensans/v36/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4nY1M2xLER.ttf',
+            src: '/assets/OpenSans-Regular.ttf',
             fontWeight: 'normal'
         }
     ]
 })
+
 
 const styles = StyleSheet.create({
     body: {
