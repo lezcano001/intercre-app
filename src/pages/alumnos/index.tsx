@@ -60,7 +60,6 @@ export default function Participants() {
                             gap-3
                             flex-wrap"
                     >
-                        <GenerateParticipantsCredentialsPDF />
                         <Button
                             as={NextLink}
                             href="/alumnos/crear"
@@ -89,6 +88,14 @@ export default function Participants() {
                     totalCountOfRegisters={participants.data?.pagination.total ?? STUDENTS_PER_PAGE}
                     registersPerPage={STUDENTS_PER_PAGE}
                 />
+
+                <Flex
+                    className="
+                        ml-auto
+                        mt-12"
+                >
+                    <GenerateParticipantsCredentialsPDF />
+                </Flex>
             </Card>
         </DashboardLayout>
     )

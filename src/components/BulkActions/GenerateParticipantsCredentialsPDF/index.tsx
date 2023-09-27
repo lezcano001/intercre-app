@@ -68,6 +68,9 @@ export function GenerateParticipantsCredentialsPDF({
                 onClick={() => {
                     void handleOpenModal()
                 }}
+                colorScheme="green"
+                className="
+                    w-fit"
             >
                 Acreditaciones en Lote
             </Button>
@@ -110,6 +113,7 @@ export function GenerateParticipantsCredentialsPDF({
                                 onChange={(e) => {setSearchInput(e.target.value)}}
                             />
                             <GeneratePDF
+                                isDisabled={!(checkedParticipants.find(p => p) ?? false)}
                                 participants={participants.data?.data?.participants.filter((_, idx) => {
                                     return checkedParticipants[idx]
                                 }).map(participant => {

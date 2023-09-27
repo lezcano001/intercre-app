@@ -15,9 +15,10 @@ type Participant = {
 
 interface GeneratePDFProps {
     participants: Participant[];
+    isDisabled?: boolean;
 }
 
-export function GeneratePDF({ participants }: GeneratePDFProps) {
+export function GeneratePDF({ participants, isDisabled = false }: GeneratePDFProps) {
     const { isOpen, onClose, onOpen } = useDisclosure()
 
     const [isClientSide, setIsClientSide] = useState(false)
@@ -31,6 +32,7 @@ export function GeneratePDF({ participants }: GeneratePDFProps) {
             <Button
                 colorScheme="green"
                 onClick={onOpen}
+                isDisabled={isDisabled}
             >
                 Generar Acreditaciones
             </Button>

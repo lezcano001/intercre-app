@@ -54,9 +54,6 @@ export default function Teachers() {
                     >
                         Listado de Profesores
                     </Heading>
-                    <GenerateParticipantsCredentialsPDF
-                        participantType="TEACHER"
-                    />
                 </Flex>
                 <SearchParticipantInput
                     containerClassname="mb-8 min-[800px]:!w-[20rem]"
@@ -73,6 +70,16 @@ export default function Teachers() {
                     currentPage={currentPage}
                     registersPerPage={TEACHERS_PER_PAGE}
                 />
+
+                <Flex
+                    className="
+                        ml-auto
+                        mt-12"
+                >
+                    <GenerateParticipantsCredentialsPDF
+                        participantType="TEACHER"
+                    />
+                </Flex>
             </Card>
         </DashboardLayout>
     )
