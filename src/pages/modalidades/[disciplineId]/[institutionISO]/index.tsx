@@ -9,6 +9,7 @@ import { Card } from "~/components/ui/Card";
 import { api } from "~/utils/api";
 import NextLink from 'next/link'
 import { GENDERS_MAP } from "~/utils/constants";
+import { GenerateSquadListPDF } from "~/components/GenerateSquadListPDF";
 
 interface SquadListQuery extends ParsedUrlQuery {
     disciplineId: string;
@@ -52,33 +53,49 @@ export default function SquadList() {
                     className="
                         p-8
                         sm:p-0
-                        gap-6
+                        gap-8
+                        justify-between
                         w-full
                         items-center
                         flex-wrap"
                 >
-                    <IconButton
-                        colorScheme="yellow"
-                        as={NextLink}
-                        href="/modalidades"
-                        aria-label="Volver"
-                        icon={
-                            <RiArrowLeftLine
-                                className="
-                                    w-6
-                                    h-6"
-                            />
-                        }
-                    />
-                    <Heading
-                        as="h1"
+                    <Flex
                         className="
-                            text-gray-600
-                            !text-xl
-                            sm:!text-2xl"
+                            items-center
+                            gap-6"
                     >
-                        {disciplineData?.data?.name} { disciplineData?.data?.genreCategory ? GENDERS_MAP[disciplineData?.data?.genreCategory as keyof typeof GENDERS_MAP] : ""} - Lista de Buena Fe
-                    </Heading>
+                        <IconButton
+                            colorScheme="yellow"
+                            as={NextLink}
+                            href="/modalidades"
+                            aria-label="Volver"
+                            icon={
+                                <RiArrowLeftLine
+                                    className="
+                                        w-6
+                                        h-6"
+                                />
+                            }
+                        />
+                        <Heading
+                            as="h1"
+                            className="
+                                text-gray-600
+                                !text-xl
+                                sm:!text-2xl"
+                        >
+                            {disciplineData?.data?.name} { disciplineData?.data?.genreCategory ? GENDERS_MAP[disciplineData?.data?.genreCategory as keyof typeof GENDERS_MAP] : ""} - Lista de Buena Fe
+                        </Heading>
+                    </Flex>
+                    {disciplineData.data && squadData.data ? (
+                        <GenerateSquadListPDF
+                            disciplineId={disciplineData.data.disciplineId}
+                            institutionISO={squadData.data.institution!.ISO}
+                            institutionName={squadData.data.institution!.name}
+                            category={disciplineData.data.genreCategory}
+                        />
+                    ) : null
+                    }
                 </Flex>
                 {squadData?.data?.roles ? squadData.data.roles.map((role) => {
                     return (

@@ -114,9 +114,6 @@ export function SquadParticipantsList({
                             sm:flex-wrap
                             w-full"
                     >
-                        <Button>
-                            Acreditación - PDF
-                        </Button>
                         <Button
                             isLoading={isLoading}
                             colorScheme="red"
