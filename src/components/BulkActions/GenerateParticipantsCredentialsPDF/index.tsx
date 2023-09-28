@@ -78,7 +78,7 @@ export function GenerateParticipantsCredentialsPDF({
                     w-full
                     sm:w-fit"
             >
-                Acreditaciones en Lote
+                Multiples Acreditaciones
             </Button>
             <Modal
                 isOpen={isOpen}
