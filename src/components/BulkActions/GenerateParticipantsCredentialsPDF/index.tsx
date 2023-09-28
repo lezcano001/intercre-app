@@ -10,13 +10,17 @@ import { type PARTICIPANTS_TYPES_MAP, STUDENTS_PER_PAGE } from "~/utils/constant
 
 interface GenerateParticipantsCredentialsPDFProps {
     participantType?: keyof typeof PARTICIPANTS_TYPES_MAP;
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
 }
 
 export function GenerateParticipantsCredentialsPDF({
-    participantType = "STUDENT"
+    participantType = "STUDENT",
+    isOpen,
+    onClose,
+    onOpen
 }: GenerateParticipantsCredentialsPDFProps) {
-    const { isOpen, onClose, onOpen } = useDisclosure()
-
     const [searchInput, setSearchInput] = useState("")
     
     const [currentPage, setCurrentPage] = useState(1)
@@ -30,6 +34,7 @@ export function GenerateParticipantsCredentialsPDF({
         participantType: participantType
     }, {
         enabled: false,
+        staleTime: Infinity
     })
 
     function handleOnClose() {

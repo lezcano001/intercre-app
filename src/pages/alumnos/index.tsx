@@ -1,4 +1,4 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading, useDisclosure } from "@chakra-ui/react";
 import { StudentsTable } from "~/components/StudentsTable";
 import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
@@ -12,6 +12,8 @@ import { api } from "~/utils/api";
 import { GenerateParticipantsCredentialsPDF } from "~/components/BulkActions/GenerateParticipantsCredentialsPDF";
 
 export default function Participants() {
+    const { isOpen, onClose, onOpen } = useDisclosure()
+
     const [searchInput, setSearchInput] = useState("")
 
     const [currentPage, setCurrentPage] = useState(1)
@@ -22,6 +24,8 @@ export default function Participants() {
         filterByCI: debouncedSearchInput ?? undefined,
         page: currentPage,
         perPage: STUDENTS_PER_PAGE
+    }, {
+        staleTime: isOpen ? Infinity : 5 * 1000, // 5 seconds
     })
 
     useEffect(() => {
@@ -95,7 +99,11 @@ export default function Participants() {
                         mt-12
                         w-full"
                 >
-                    <GenerateParticipantsCredentialsPDF />
+                    <GenerateParticipantsCredentialsPDF
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        onOpen={onOpen}
+                    />
                 </Flex>
             </Card>
         </DashboardLayout>
