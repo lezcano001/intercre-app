@@ -70,7 +70,8 @@ export function GenerateParticipantsCredentialsPDF({
                 }}
                 colorScheme="green"
                 className="
-                    w-fit"
+                    w-full
+                    sm:w-fit"
             >
                 Acreditaciones en Lote
             </Button>

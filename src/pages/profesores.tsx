@@ -73,8 +73,9 @@ export default function Teachers() {
 
                 <Flex
                     className="
-                        ml-auto
-                        mt-12"
+                        justify-end
+                        mt-12
+                        w-full"
                 >
                     <GenerateParticipantsCredentialsPDF
                         participantType="TEACHER"

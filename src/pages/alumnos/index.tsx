@@ -91,8 +91,9 @@ export default function Participants() {
 
                 <Flex
                     className="
-                        ml-auto
-                        mt-12"
+                        justify-end
+                        mt-12
+                        w-full"
                 >
                     <GenerateParticipantsCredentialsPDF />
                 </Flex>
