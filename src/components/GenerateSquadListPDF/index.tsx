@@ -6,6 +6,7 @@ import { ROLES_MAP } from "~/utils/constants";
 import { isBrowser, isMobile } from "react-device-detect";
 import { MobileVersion } from "./MobileVersion";
 import { BrowserVersion } from "./BrowserVersion";
+import { formatToDateString } from "~/utils/formatters";
 
 interface GenerateSquadListPDFProps {
     disciplineId: string;
@@ -88,7 +89,7 @@ export function GenerateSquadListPDF({
                                                 CI: participant.CI,
                                                 firstname: participant.firstname,
                                                 lastname: participant.lastname,
-                                                birthDate: `${participant.birthDate.getDate()}/${participant.birthDate.getMonth()}/${participant.birthDate.getFullYear()}`,
+                                                birthDate: formatToDateString.format(participant.birthDate),
                                                 telephone: participant.telephone ?? ""
                                             }
                                         }),

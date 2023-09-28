@@ -20,8 +20,15 @@ const calculateAge = (birthDate: Date) => {
     return age
 }
 
+const formatToDateString = new Intl.DateTimeFormat('es-PY', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    })
+
 export {
     emptyStringToUndefined,
     capitalizeText,
-    calculateAge
+    calculateAge,
+    formatToDateString
 }
