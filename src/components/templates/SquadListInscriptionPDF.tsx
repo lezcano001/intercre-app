@@ -66,8 +66,6 @@ export function SquadListInscriptionPDF({
     discipline,
     category
 }: SquadListInscriptionPDFProps) {
-    console.log(roles)
-
     return (
         <Document>
             <Page
