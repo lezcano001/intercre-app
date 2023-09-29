@@ -23,10 +23,19 @@ export function SquadsTable() {
         <TableContainer
             className=" 
                 text-sm
-                sm:text-base"
+                sm:text-base
+                max-h-[35vh]"
+            overflowY="auto"
         >
             <Table variant='simple'>
-                <Thead>
+                <Thead
+                    className="
+                        sticky
+                        bg-white
+                        top-0
+                        shadow-sm
+                        z-10"
+                >
                     <Tr>
                         <Th>MODALIDAD</Th>
                         <Th>CATEGORÍA</Th>

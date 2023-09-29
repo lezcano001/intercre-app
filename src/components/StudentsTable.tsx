@@ -26,14 +26,21 @@ export function StudentsTable({ participants, isLoading }: StudentsTableProps) {
 
     return (
         <TableContainer
-            className="
+            className=" 
                 text-sm
-                sm:text-base"
+                sm:text-base
+                max-h-[35vh]"
+            overflowY="auto"
         >
-            <Table
-                variant='simple'
-            >
-                <Thead>
+            <Table variant='simple'>
+                <Thead
+                    className="
+                        sticky
+                        bg-white
+                        top-0
+                        shadow-sm
+                        z-10"
+                >
                     <Tr>
                         <Th
                             className="
