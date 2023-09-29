@@ -1,18 +1,20 @@
 import { type ChangeEvent } from "react";
 import { StandardInput } from "./ui/StandardInput";
 
-interface SearchParticipantInputProps {
+interface SearchInputComponentProps {
     searchText: string;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     containerClassname?: HTMLDivElement["className"];
+    label: string;
+    placeholder: string;
 }
 
-export function SearchParticipantInput({ onChange, searchText, containerClassname = "" }: SearchParticipantInputProps) {
+export function SearchInputComponent({ onChange, searchText, containerClassname = "", label, placeholder }: SearchInputComponentProps) {
     return (
         <StandardInput
-            label="Buscar Participante:"
+            label={label}
             containerClassName={containerClassname}
-            placeholder="Ingrese un Doc. de Identidad"
+            placeholder={placeholder}
             onChange={onChange}
             value={searchText}
         />

@@ -1,23 +1,38 @@
 import { Button, Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useMediaQuery } from "@chakra-ui/react";
-import { TRPCError } from "@trpc/server";
+// import { TRPCError } from "@trpc/server";
 
 import NextLink from 'next/link'
-import { api } from "~/utils/api";
+// import { api } from "~/utils/api";
 import { SquadListActionsCondensedButton } from "./SquadListActionsCondensedButton";
 import { GenerateSquadListPDF } from "./GenerateSquadListPDF";
 
-export function SquadsTable() {
-    const disciplines = api.disciplines.getAll.useQuery();
+type Discipline = {
+    disciplineId: string;
+    institutionISO: number;
+    name: string;
+    genreCategory: string;
+}
+
+interface SquadsTableProps {
+    disciplines: Discipline[];
+    isLoading: boolean;
+}
+
+export function SquadsTable({
+    disciplines,
+    isLoading
+}: SquadsTableProps) {
+    // const disciplines = api.disciplines.getAll.useQuery();
 
     const [isLargerThan640] = useMediaQuery('(min-width: 640px)')
 
-    if (disciplines?.data instanceof TRPCError) {
-        return (
-            <Flex>
-                {disciplines.data.message}
-            </Flex>
-        )
-    }
+    // if (disciplines?.data instanceof TRPCError) {
+    //     return (
+    //         <Flex>
+    //             {disciplines.data.message}
+    //         </Flex>
+    //     )
+    // }
 
     return (
         <TableContainer
@@ -47,7 +62,7 @@ export function SquadsTable() {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {disciplines.isFetching ? (
+                    {isLoading ? (
                         <Tr>
                             <Td
                                 colSpan={4}
@@ -66,7 +81,7 @@ export function SquadsTable() {
                             </Td>
                         </Tr>
                     ) : (
-                        disciplines?.data && disciplines.data.length > 0 ? disciplines.data.map(discipline => (
+                        disciplines.length > 0 ? disciplines.map(discipline => (
                             <Tr
                                 key={discipline.disciplineId}
                             >

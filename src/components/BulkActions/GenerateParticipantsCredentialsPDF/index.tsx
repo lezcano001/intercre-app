@@ -1,6 +1,6 @@
 import { Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { SearchParticipantInput } from "~/components/SearchParticipantInput";
+import { SearchInputComponent } from "~/components/SearchInputComponent";
 import { ParticipantsTable } from "../ParticipantsTable";
 import { useDebounce } from "@uidotdev/usehooks";
 import { api } from "~/utils/api";
@@ -113,10 +113,12 @@ export function GenerateParticipantsCredentialsPDF({
                                 gap-6
                                 mb-8"
                         >
-                            <SearchParticipantInput
+                            <SearchInputComponent
                                 containerClassname="min-[800px]:!w-[20rem]"
                                 searchText={searchInput}
                                 onChange={(e) => {setSearchInput(e.target.value)}}
+                                label="Buscar Participante:"
+                                placeholder="Ingrese un Doc. de Identidad"
                             />
                             <GeneratePDF
                                 isDisabled={!(checkedParticipants.find(p => p) ?? false)}

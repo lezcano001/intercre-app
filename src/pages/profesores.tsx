@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { api } from "~/utils/api";
 import { TEACHERS_PER_PAGE } from "~/utils/constants";
-import { SearchParticipantInput } from "~/components/SearchParticipantInput";
+import { SearchInputComponent } from "~/components/SearchInputComponent";
 import { Pagination } from "~/components/Pagination";
 import { GenerateParticipantsCredentialsPDF } from "~/components/BulkActions/GenerateParticipantsCredentialsPDF";
 
@@ -58,10 +58,12 @@ export default function Teachers() {
                         Listado de Profesores
                     </Heading>
                 </Flex>
-                <SearchParticipantInput
+                <SearchInputComponent
                     containerClassname="mb-8 min-[800px]:!w-[20rem]"
                     searchText={searchInput}
                     onChange={(e) => {setSearchInput(e.target.value)}}
+                    label="Buscar Profesor:"
+                    placeholder="Ingrese un Doc. de Identidad"
                 />
                 <TeachersTable
                     isLoading={participants.isFetching}

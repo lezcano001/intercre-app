@@ -3,7 +3,7 @@ import { StudentsTable } from "~/components/StudentsTable";
 import { DashboardLayout } from "~/components/layouts/DashboardLayout";
 import { Card } from "~/components/ui/Card";
 import NextLink from 'next/link'
-import { SearchParticipantInput } from "~/components/SearchParticipantInput";
+import { SearchInputComponent } from "~/components/SearchInputComponent";
 import { useEffect, useState } from "react";
 import { Pagination } from "~/components/Pagination";
 import { STUDENTS_PER_PAGE } from "~/utils/constants";
@@ -77,10 +77,12 @@ export default function Participants() {
                         </Button>
                     </Flex>
                 </Flex>
-                <SearchParticipantInput
+                <SearchInputComponent
                     containerClassname="mb-8 min-[800px]:!w-[20rem]"
                     searchText={searchInput}
                     onChange={(e) => {setSearchInput(e.target.value)}}
+                    label="Buscar Alumno:"
+                    placeholder="Ingrese un Doc. de Identidad"
                 />
                 <StudentsTable
                     participants={participants.data?.data.participants}
