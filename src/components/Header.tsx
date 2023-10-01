@@ -67,7 +67,12 @@ export function Header() {
                             >
                                 <Text
                                     className="
-                                        font-semibold"
+                                        font-semibold
+                                        whitespace-nowrap
+                                        max-w-[8rem]
+                                        min-[450px]:max-w-none
+                                        overflow-hidden
+                                        overflow-ellipsis"
                                 >
                                     {session?.user.name}
                                 </Text>
