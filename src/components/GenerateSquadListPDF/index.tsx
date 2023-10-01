@@ -60,6 +60,7 @@ export function GenerateSquadListPDF({
                                                 telephone: participant.telephone ?? ""
                                             }
                                         }),
+                                        participantsLimit: role.participantsLimit,
                                         roleName: ROLES_MAP[role.role as keyof typeof ROLES_MAP]
                                     }
                                 })}
@@ -93,7 +94,8 @@ export function GenerateSquadListPDF({
                                                 telephone: participant.telephone ?? ""
                                             }
                                         }),
-                                        roleName: ROLES_MAP[role.role as keyof typeof ROLES_MAP]
+                                        roleName: ROLES_MAP[role.role as keyof typeof ROLES_MAP],
+                                        participantsLimit: role.participantsLimit
                                     }
                                 })}
                                 discipline={squad.data!.discipline.name}

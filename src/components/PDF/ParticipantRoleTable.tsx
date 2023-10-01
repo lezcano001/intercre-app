@@ -6,9 +6,10 @@ interface ParticipantRoleTableProps {
     title: string;
     data: string[][];
     additionalField?: string;
+    participantsLimit: number;
 }
 
-export function ParticipantRoleTable ({ title, data, additionalField = "Firma" }: ParticipantRoleTableProps) {
+export function ParticipantRoleTable ({ title, data, additionalField = "Firma", participantsLimit }: ParticipantRoleTableProps) {
     return (
         <View
             style={{
@@ -49,7 +50,7 @@ export function ParticipantRoleTable ({ title, data, additionalField = "Firma" }
                         width: '15%'
                     },
                 ]}
-                data={data.length > 0 ? data : [["1"]]}
+                data={data.length > 0 ? data : Array.from({length: participantsLimit}).map((_, idx) =>  [String(idx + 1)])}
             />
         </View>
     )

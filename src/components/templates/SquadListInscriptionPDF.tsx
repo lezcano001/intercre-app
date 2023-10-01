@@ -53,6 +53,7 @@ interface SquadListInscriptionPDFProps {
             birthDate: string;
             telephone: string;
         }[];
+        participantsLimit: number;
     }[];
     discipline: string;
     category: string;
@@ -207,6 +208,7 @@ export function SquadListInscriptionPDF({
                                     title={role.roleName}
                                     data={tableData}
                                     additionalField={role.students ? "Fecha de Nacimiento" : undefined}
+                                    participantsLimit={role.participantsLimit}
                                 />)
                             })}
                         </View>
