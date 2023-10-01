@@ -24,6 +24,7 @@ export function ParticipantRoleTable ({ title, data, additionalField = "Firma", 
                     fontWeight: 'semibold',
                     marginBottom: '0.2cm'
                 }}
+                minPresenceAhead={18}
             >
                 {title}
             </Text>
