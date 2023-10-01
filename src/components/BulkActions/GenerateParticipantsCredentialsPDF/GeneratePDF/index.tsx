@@ -1,8 +1,8 @@
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
-import { PDFViewer } from "@react-pdf/renderer";
-import { useEffect, useState } from "react";
 import { BulkParticipantsCredentialsPDF } from '../../../templates/BulkParticipantsCredentialsPDF'
 import { type GENDERS, type PARTICIPANTS_TYPES_MAP } from "~/utils/constants";
+import { isBrowser, isMobile } from "react-device-detect";
+import { MobileVersion } from "./MobileVersion";
+import { BrowserVersion } from "./BrowserVersion";
 
 type Participant = {
     CI: string;
@@ -19,55 +19,28 @@ interface GeneratePDFProps {
 }
 
 export function GeneratePDF({ participants, isDisabled = false }: GeneratePDFProps) {
-    const { isOpen, onClose, onOpen } = useDisclosure()
-
-    const [isClientSide, setIsClientSide] = useState(false)
-
-    useEffect(() => {
-        setIsClientSide(true)
-    }, [])
-
     return (
         <>
-            <Button
-                colorScheme="green"
-                onClick={onOpen}
-                isDisabled={isDisabled}
-            >
-                Generar Acreditaciones
-            </Button>
-            <Modal
-                isOpen={isOpen}
-                onClose={onClose}
-                size="6xl"
-            >
-                <ModalOverlay />
-                <ModalContent
-                    className="
-                        p-2"
-                >
-                    <ModalHeader
-                        className="
-                            text-gray-600"
-                    >
-                        Previsualización de Acreditaciones en Lote
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        {isClientSide ? (
-                            <PDFViewer
-                                className="
-                                    w-full
-                                    h-[60vh]"
-                            >
-                                <BulkParticipantsCredentialsPDF
-                                    participants={participants}
-                                />
-                            </PDFViewer>                       
-                        ) : null}
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
+            {isMobile ? (
+                <MobileVersion
+                    document={
+                        <BulkParticipantsCredentialsPDF
+                            participants={participants}
+                        />
+                    }
+                    isDisabled={isDisabled}
+               />
+            ) : null}
+            {isBrowser ? (
+                <BrowserVersion
+                    document={
+                        <BulkParticipantsCredentialsPDF
+                            participants={participants}
+                        />
+                    }
+                    isDisabled={isDisabled}
+                />
+            ) : null}
         </>
     )
 }

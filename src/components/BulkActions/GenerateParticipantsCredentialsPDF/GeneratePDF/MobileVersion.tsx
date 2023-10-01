@@ -1,34 +1,38 @@
-import { Button, Flex, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, Text, useDisclosure } from "@chakra-ui/react";
 import { usePDF } from "@react-pdf/renderer";
-import { type ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 
-interface MobileVersionProps {
-    CI: string;
+interface BrowserVersionProps {
     document: ReactElement;
-    as?: "Button" | "MenuItem"
+    isDisabled?: boolean;
 }
 
-export function MobileVersion({ 
-    as = "Button",
+export function MobileVersion({
     document,
-    CI
- }: MobileVersionProps) {
+    isDisabled = false
+}: BrowserVersionProps) {
     const { isOpen, onClose, onOpen } = useDisclosure()
 
-    const [instance] = usePDF({
+    
+    const [instance, update] = usePDF({
         document
     })
-
+    
+    useEffect(() => {
+        // eslint-disable-next-line
+        update(document)
+        // eslint-disable-next-line
+    }, [document])
+    
     return (
         <>
-            {as === "Button" ? (
-                <Button
-                    colorScheme="orange"
-                    onClick={onOpen}
-                >
-                    Acreditación
-                </Button>
-            ) : <MenuItem onClick={onOpen}>Acreditación</MenuItem>}
+            <Button
+                onClick={onOpen}
+                colorScheme="orange"
+                isDisabled={isDisabled}
+            >
+                Imprimir Acreditaciones
+            </Button>
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
@@ -43,7 +47,7 @@ export function MobileVersion({
                         className="
                             text-gray-600"
                     >
-                        Previsualización de Acreditación
+                        Previsualización de Acreditaciones en Lote
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
@@ -57,7 +61,7 @@ export function MobileVersion({
                                     py-4"
                             >
                                 <Spinner />
-                                <Text>Generando Acreditación</Text>
+                                <Text>Generando Acreditaciones</Text>
                             </Flex>
                         ) : (
                             <Flex
@@ -71,22 +75,23 @@ export function MobileVersion({
                                     className="
                                         text-gray-600"
                                 >
-                                    La Acreditación fue generada correctamente
+                                    Las Acreditaciones fueron generadas correctamente
                                 </Text>
                                 <Button
                                     colorScheme="orange"
-                                    download={"acreditacion_" + CI + ".pdf"}
+                                    download={"acreditaciones_en_lote.pdf"}
                                     as='a'
                                     href={instance.url!}
                                     className='!bg-orange-400'
                                 >
-                                    Imprimir Acreditación
+                                    Imprimir Acreditaciones
                                 </Button>
                             </Flex>
                         )}
                     </ModalBody>
                 </ModalContent>
             </Modal>
+
         </>
     )
 }

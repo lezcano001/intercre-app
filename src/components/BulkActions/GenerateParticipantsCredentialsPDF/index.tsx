@@ -1,4 +1,4 @@
-import { Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { SearchInputComponent } from "~/components/SearchInputComponent";
 import { ParticipantsTable } from "../ParticipantsTable";
@@ -47,7 +47,7 @@ export function GenerateParticipantsCredentialsPDF({
         await participants.refetch()
     }
 
-    const [checkedParticipants, setCheckedParticipants] = useState(participants.data?.data.participants.map(p => false) ?? [])
+    const [checkedParticipants, setCheckedParticipants] = useState(participants.data?.data.participants.map(_ => false) ?? [])
 
     useEffect(() => {
         if (participants.data?.pagination.page) {
@@ -63,7 +63,7 @@ export function GenerateParticipantsCredentialsPDF({
 
     useEffect(() => {
         if (participants.data?.data.participants) {
-            setCheckedParticipants(participants.data?.data.participants.map(p => false))
+            setCheckedParticipants(participants.data?.data.participants.map(_ => false))
         }
     }, [participants.data?.data.participants])
 

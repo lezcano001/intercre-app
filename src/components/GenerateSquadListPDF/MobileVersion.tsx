@@ -1,4 +1,4 @@
-import { Button, MenuItem } from "@chakra-ui/react";
+import { Button, Flex, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, Text, useDisclosure } from "@chakra-ui/react";
 import { usePDF } from "@react-pdf/renderer";
 import { useEffect, type ReactElement } from "react";
 
@@ -17,11 +17,11 @@ export function MobileVersion({
     isLoading,
     category
 }: MobileVersionProps) {
+    const { isOpen, onClose, onOpen } = useDisclosure()
+
     const [instance, update] = usePDF({
         document
     })
-
-    const disabled = isLoading || instance.loading
 
     useEffect(() => {
         // eslint-disable-next-line
@@ -34,24 +34,70 @@ export function MobileVersion({
             {as === "Button" ? (
                 <Button
                     colorScheme="orange"
-                    download={"Lista_de_buena_fe-" + discipline + "-" + category + "-" + ".pdf"}
-                    as='a'
-                    href={instance.url!}
-                    disabled={disabled}
-                    className={`${disabled ? '!bg-orange-400' : ''}`}
+                    onClick={onOpen}
                 >
-                    Imprimir{disabled ? "..." : ""}
+                    Imprimir
                 </Button>
-            ) : (
-                <MenuItem
-                    as='a'
-                    download={"Lista_de_buena_fe-" + discipline + "-" + category + "-" + ".pdf"}
-                    href={instance.url!}
-                    disabled={instance.loading || isLoading}
+            ) : <MenuItem onClick={onOpen}>Imprimir</MenuItem>}
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                size="xl"
+            >
+                <ModalOverlay />
+                <ModalContent
+                    className="
+                        p-2"
                 >
-                    Imprimir{disabled ? "..." : ""}
-                </MenuItem>
-            )}
+                    <ModalHeader
+                        className="
+                            text-gray-600"
+                    >
+                        Generar de Lista de Buena Fe 
+                    </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        {isLoading || instance.loading ? (
+                            <Flex
+                                className="
+                                    items-center
+                                    gap-4
+                                    text-gray-600
+                                    justify-center
+                                    py-4"
+                            >
+                                <Spinner />
+                                <Text>Generando Lista de Buena Fe...</Text>
+                            </Flex>
+                        ) : (
+                            <Flex
+                                className="
+                                    flex-col
+                                    items-center
+                                    gap-4
+                                    py-4"
+                            >
+                                <Text
+                                    className="
+                                        text-gray-600"
+                                >
+                                    La lista de Buena Fe fue generada correctamente
+                                </Text>
+                                <Button
+                                    colorScheme="orange"
+                                    download={"Lista_de_buena_fe-" + discipline + "-" + category + "-" + ".pdf"}
+                                    as='a'
+                                    href={instance.url!}
+                                    className='!bg-orange-400'
+                                >
+                                    Imprimir Lista de Buena Fe
+                                </Button>
+                            </Flex>
+                        )}
+                    </ModalBody>
+                </ModalContent>
+
+            </Modal>
         </>        
     )
 }
