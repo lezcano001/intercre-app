@@ -1,8 +1,7 @@
-import { Box, Button, Flex, Heading, Text, useToast } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { SuscribeParticipantToSquadButton } from "./SuscribeParticipantToSquadButton";
 import { type GENDERS_CATEGORIES } from "~/utils/constants";
-import { api } from "~/utils/api";
-import { useState } from "react";
+import { SquadParticipantsListItem } from "./SquadParticipantsListItem";
 
 interface SquadParticipantsListProps {
     participants: {
@@ -28,39 +27,6 @@ export function SquadParticipantsList({
     restrictGenders,
     allowedParticipantType
 }: SquadParticipantsListProps) {
-    const trpcUtils = api.useContext()
-
-    const toast = useToast()
-
-    const unsuscribeFromSquad = api.squads.unsuscribeFromSquad.useMutation({
-        onSuccess: async () => {
-            await trpcUtils.squads.invalidate()
-
-            toast({
-                title: 'Participante eliminado con éxito',
-                position: 'bottom-right',
-                isClosable: true,
-                status: 'success'
-            })
-        }
-    })
-    const [isLoading, setIsLoading] = useState(false)
-
-
-    async function handleUnsuscribeFromSquad({
-        participantCI
-    }: {
-        participantCI: string
-    }) {
-        setIsLoading(true)
-        await unsuscribeFromSquad.mutateAsync({
-            disciplineId,
-            participantCI,
-            roleId
-        })
-        setIsLoading(false)
-    }
-
     return (
         <Flex
             className="
@@ -69,64 +35,13 @@ export function SquadParticipantsList({
                 flex-col"
         >
             {participants.map((participant) => (
-                <Flex
-                    key={participant.CI}
-                    className="
-                        p-6
-                        w-full
-                        justify-between
-                        border-[1px]
-                        gap-8
-                        border-slate-200
-                        rounded-lg
-                        items-center
-                        flex-wrap"
-                >
-                    <Box
-                        className="
-                            text-gray-600
-                            w-full
-                            max-w-md"
-                    >
-                        <Box
-                            className="
-                                w-full"
-                        >
-                            <Heading
-                                as="h3"
-                                className="
-                                    mb-4
-                                    !text-lg"
-                            >
-                                {participant.name}
-                            </Heading>
-                        </Box>
-                        <Text>
-                            <Text className="text-slate-600" as="strong">C.I.:</Text> 6.656.045
-                        </Text>
-                    </Box>
-                    <Flex
-                        className="
-                            gap-3
-                            flex-col
-                            sm:flex-row
-                            sm:w-fit
-                            sm:flex-wrap
-                            w-full"
-                    >
-                        <Button
-                            isLoading={isLoading}
-                            colorScheme="red"
-                            onClick={() => {
-                                void handleUnsuscribeFromSquad({
-                                    participantCI: participant.CI
-                                })
-                            }}
-                        >
-                            Eliminar
-                        </Button>
-                    </Flex>
-                </Flex>
+                <SquadParticipantsListItem
+                    key={participant.CI + roleId}
+                    CI={participant.CI}
+                    disciplineId={disciplineId}
+                    name={participant.name}
+                    roleId={roleId}
+                />
             ))}
             <Flex
                 className="
