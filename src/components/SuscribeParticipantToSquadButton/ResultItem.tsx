@@ -9,9 +9,20 @@ interface ResultItemProps {
     roleId: string;
     disciplineId: string;
     onAddUser: () => void;
+    disableAddParticipantButtons: boolean;
+    setDisableAddParticipantButtons: (disable: boolean) => void;
 }
 
-export function ResultItem({ CI, name, disciplineId, institutionISO, roleId, onAddUser }: ResultItemProps) {
+export function ResultItem({
+    CI,
+    name,
+    disciplineId,
+    institutionISO,
+    roleId,
+    onAddUser,
+    disableAddParticipantButtons,
+    setDisableAddParticipantButtons
+}: ResultItemProps) {
     const trpcUtils = api.useContext()
 
     const [isLoading, setIsLoading] = useState(false)
@@ -25,6 +36,7 @@ export function ResultItem({ CI, name, disciplineId, institutionISO, roleId, onA
 
 
     async function handleSuscribeParticipant() {
+        setDisableAddParticipantButtons(true)
         setIsLoading(true)
         await suscribeToSquad.mutateAsync({
             participantCI: CI,
@@ -33,6 +45,7 @@ export function ResultItem({ CI, name, disciplineId, institutionISO, roleId, onA
             roleId
         })
         onAddUser()
+        setDisableAddParticipantButtons(false)
         setIsLoading(false)
     }
 
@@ -70,6 +83,7 @@ export function ResultItem({ CI, name, disciplineId, institutionISO, roleId, onA
                 }}
                 colorScheme="green"
                 isLoading={isLoading}
+                isDisabled={disableAddParticipantButtons}
             >
                 Agregar
             </Button>

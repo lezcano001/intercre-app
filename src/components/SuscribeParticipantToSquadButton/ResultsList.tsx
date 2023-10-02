@@ -28,6 +28,8 @@ export function ResultsList({
 }: ResultsListProps) {
     const debouncedSearchInput = useDebounce(searchInput, 400)
 
+    const [disableAddParticipantButtons, setDisableAddParticipantButtons] = useState(false)
+
     const searchParticipant = api.participants.searchParticipant.useQuery({
         searchText: debouncedSearchInput,
         roleId,
@@ -88,6 +90,8 @@ export function ResultsList({
             </Text>
             {participants.length > 0 ? participants.map((result) => (
                 <ResultItem
+                    disableAddParticipantButtons={disableAddParticipantButtons}
+                    setDisableAddParticipantButtons={setDisableAddParticipantButtons}
                     key={result.CI}
                     CI={result.CI}
                     name={result.name}
