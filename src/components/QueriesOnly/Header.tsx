@@ -38,14 +38,16 @@ export function Header() {
                         />
                     </Button>
                 ) : null}
-                <Text
-                    className="
-                        text-lg
-                        font-semibold
-                        text-gray-600"
-                >
-                    Interfaz de consultas
-                </Text>
+                {isLargerThan900 ? (
+                    <Text
+                        className="
+                            text-lg
+                            font-semibold
+                            text-gray-600"
+                    >
+                        Interfaz de consultas
+                    </Text>
+                ) : null}
                 <Button
                     as={NextLink}
                     href="/auth/login"
