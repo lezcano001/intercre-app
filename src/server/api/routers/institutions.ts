@@ -1,6 +1,7 @@
 import {
     createTRPCRouter,
     protectedProcedure,
+    publicProcedure,
 } from '~/server/api/trpc'
 
 export const institutionsRouter = createTRPCRouter({
@@ -14,4 +15,7 @@ export const institutionsRouter = createTRPCRouter({
             }
         })
     }),
+    getAllInstitutions: publicProcedure.query(({ ctx }) => {
+        return ctx.prisma.institution.findMany()
+    })
 })

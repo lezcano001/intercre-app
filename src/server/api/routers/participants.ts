@@ -4,6 +4,7 @@ import { z } from 'zod'
 import {
     createTRPCRouter,
     protectedProcedure,
+    publicProcedure,
 } from '~/server/api/trpc'
 import { CIUniqueConstraintViolationError, InternalServerError, ParticipantNotFound, UnauthorizedError } from '~/utils/serverErrors'
 import { TRPCError } from '@trpc/server'
@@ -14,6 +15,28 @@ import { calculateAge, capitalizeText, emptyStringToUndefined } from '~/utils/fo
 
 // Add the try...catch blocks to catch the errors
 export const participantsRouter = createTRPCRouter({
+    getParticipantPublicData: publicProcedure.input(z.object({
+        CI: z.string(),
+        institutionISO: z.number()
+    })).query(async ({ input, ctx }) => {
+        const { CI, institutionISO } = input
+
+        const participant = await ctx.prisma.participant.findUnique({
+            where: {
+                CI,
+                institutionISO
+            },
+            include: {
+                institution: true
+            }
+        })
+
+        if (!participant) {
+            throw ParticipantNotFound()
+        }
+
+        return participant
+    }),
     getAll: protectedProcedure.input(z.object({
         participantType: z.enum(["STUDENT", "TEACHER"]).optional(),
         filterByCI: z.string().optional(),

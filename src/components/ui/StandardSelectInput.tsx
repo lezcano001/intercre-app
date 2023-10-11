@@ -1,4 +1,5 @@
 import { FormControl, FormErrorMessage, FormLabel, Select, type SelectProps } from "@chakra-ui/react";
+import { type ForwardRefRenderFunction, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface StandardSelectInputProps extends SelectProps {
@@ -11,7 +12,7 @@ interface StandardSelectInputProps extends SelectProps {
     isError?: string;
 }
 
-export function StandardSelectInput({ className = "", options, label, isError, isRequired, ...rest }: StandardSelectInputProps) {
+const StandardSelectInputBase: ForwardRefRenderFunction<HTMLSelectElement, StandardSelectInputProps> = ({ className = "", options, label, isError, isRequired, ...rest }, ref) => {
     return (
         <FormControl
             className={twMerge(`
@@ -25,6 +26,7 @@ export function StandardSelectInput({ className = "", options, label, isError, i
                 </FormLabel>
             ) : null}
             <Select
+                ref={ref}
                 variant="filled"
                 className={twMerge(`
                     !bg-gray-200`, className)}
@@ -47,3 +49,5 @@ export function StandardSelectInput({ className = "", options, label, isError, i
         </FormControl>
     )
 }
+
+export const StandardSelectInput = forwardRef(StandardSelectInputBase)
