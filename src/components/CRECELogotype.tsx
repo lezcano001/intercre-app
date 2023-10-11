@@ -5,9 +5,10 @@ import { twMerge } from "tailwind-merge";
 
 interface LogotypeProps {
     className?: HTMLAnchorElement["className"];
+    href?: string;
 }
 
-export function CRECELogotype({ className = "" }: LogotypeProps) {
+export function CRECELogotype({ className = "", href }: LogotypeProps) {
     return (
         <Link
             as={NextLink}
@@ -15,7 +16,7 @@ export function CRECELogotype({ className = "" }: LogotypeProps) {
                 relative
                 h-20
                 w-20`, className)}
-            href="/"
+            href={href ?? "/"}
         >
             <Image
                 priority={true}

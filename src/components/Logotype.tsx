@@ -11,9 +11,10 @@ const LOGOTYPE_VARIANTS_MAP = {
 interface LogotypeProps {
     variant?: keyof typeof LOGOTYPE_VARIANTS_MAP;
     className?: HTMLAnchorElement["className"];
+    href?: string;
 }
 
-export function Logotype({ variant = "normal", className = "" }: LogotypeProps) {
+export function Logotype({ variant = "normal", className = "", href }: LogotypeProps) {
     return (
         <Link
             as={NextLink}
@@ -21,7 +22,7 @@ export function Logotype({ variant = "normal", className = "" }: LogotypeProps) 
                 w-full
                 relative
                 h-20`, className)}
-            href="/"
+            href={href ?? "/"}
         >
             <Image
                 src={LOGOTYPE_VARIANTS_MAP[variant]}
