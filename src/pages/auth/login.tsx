@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { type FormEvent, useState } from "react";
 import { StandardInput } from "~/components/ui/StandardInput";
 
+import NextLink from 'next/link'
+
 export default function LoginPage() {
     const { status } = useSession()
 
@@ -89,14 +91,26 @@ export default function LoginPage() {
                         onChange={e => setUserPasswordInput(e.target.value)}
                         type="password"
                     />
-                    <Button
-                        colorScheme="orange"
-                        type="submit"
-                        isLoading={isLoading}
-                        loadingText="Iniciando sesión"
+                    <Flex
+                        className="
+                            flex-col
+                            gap-4"
                     >
-                        Iniciar Sesión
-                    </Button>
+                        <Button
+                            colorScheme="orange"
+                            type="submit"
+                            isLoading={isLoading}
+                            loadingText="Iniciando sesión"
+                        >
+                            Iniciar Sesión
+                        </Button>
+                        <Button
+                            as={NextLink}
+                            href="/consultas"
+                        >
+                            Solo Consultas
+                        </Button>
+                    </Flex>
                 </Flex>
             </Flex>
         )
