@@ -81,11 +81,13 @@ export default function LoginPage() {
                     }}
                 >
                     <StandardInput
+                        placeholder="Para probar app: 123456"
                         label="Número de Documento:"
                         value={userCIInput}
                         onChange={e => setUserCIInput(e.target.value)}
                     />
                     <StandardInput
+                        placeholder="Para probar app: 123456"
                         label="Contraseña:"
                         value={userPasswordInput}
                         onChange={e => setUserPasswordInput(e.target.value)}
